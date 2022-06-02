@@ -1,0 +1,499 @@
+<?php
+namespace ProyectoDisponibleNameSpace
+{
+    $included_files = get_included_files();
+    if(!in_array(realpath((__DIR__).'/../../lib/base.class.php'), $included_files))
+    {
+        require (__DIR__).'/../../lib/base.class.php';            
+    }
+    use BaseNamespace\Base as Base;
+    class ProyectoDisponible extends Base
+    {
+        var $idProyecto, $titulo, $porcentajeAvanceCarrera, $carrera, $actividad, $habilidad, $modalidad, $usuario, $institucion, $cantidadAlumnos, $idarea, $area, $estatus;
+        var $ColumnAlias = array('idProyecto' => 'idProyecto', 'titulo' => 'Titulo de proyecto', 'porcentajeAvanceCarrera' => 'Porcentaje Avance Carrera', 'carrera' => 'Carrera en la que aplica', 'actividad' => 'Actividades a realizar', 'habilidad' => 'Habilidades requeridas', 'modalidad' => 'Modalidad de trabajo', 'usuario' => 'Investigador a cargo', 'institucion' => 'Institucion', 'cantidadAlumnos' => 'Cantidad de alumnos', 'idarea' => 'idArea', 'area' => 'Area', 'estatus' => 'Estado del proyecto');
+        function __construct( $id = 0 )
+        {
+            parent::__construct(get_object_vars($this), 'vw_proyectodisponible', 'idProyecto', $this->ColumnAlias, $id);
+        }
+    }
+    
+}
+?>
+
+
+
+_____________
+<?php
+if (session_status() != PHP_SESSION_ACTIVE)
+  session_start();
+include 'proyectodisponible.class.php';
+use CommonFuncNamespace\CommonFunc as   CommonFunc;
+use ProyectoDisponibleNameSpace\ProyectoDisponible as ProyectoDisponible;
+$funciones =    new CommonFunc();
+$proyectoDisponible = new ProyectoDisponible();
+
+if($_REQUEST)
+{
+    extract($_REQUEST);
+    $condicion = "1";
+    $condicion2 = "1";
+    if($idArea > "0")
+    {
+        $condicion = "idarea=$idArea";
+    }
+    if($descripcion != "")
+    {
+        $condicion2 = "titulo like '%$descripcion%'";
+    }
+    $rsProyectoDisponible = $proyectoDisponible->SelectAll("vw_proyectodisponible", "*", "$condicion AND $condicion2");
+}
+else
+{
+    $rsProyectoDisponible = $proyectoDisponible->SelectAll("vw_proyectodisponible");
+}
+
+//echo $funciones->ArrayToTable($rsProyectoDisponible, "buttonDeleteValidar");
+$optArea = $funciones->ArrayToOption($proyectoDisponible->Select("select idarea as id, descripcion from area where estatus = 1"), 0);
+if($rsProyectoDisponible == null)
+{
+    die("No existen resultados");
+}
+?>
+ <div class="col-12 mb-3">
+        <div class="input-group">
+            <span class="input-group-text">Buscar:</span>
+            <input id="txtBuscar" type="text" aria-label="Buscar proyecto" class="form-control">
+            <select id="cmbArea" aria-label="Area del proyecto" class="form-control">
+                <option value="0">Todas las areas</option>
+                <?php echo $optArea; ?>
+            </select>
+            <select id="cmbModalidad" aria-label="Modalidad del proyecto" class="form-control">
+                <option value="0">Todas las modalidades</option>
+                <option value="P">PRESENCIAL</option>
+                <option value="V">VIRTUAL</option>
+                <option value="H">HIBRIDO</option>
+            </select>
+            <button id="btnBuscar" class="btn btn-primary" type="button" id="button-addon2">Buscar <span class="fas fa-search"></span></button>
+        </div>
+    </div>
+<?php
+$countRenglones = count($rsProyectoDisponible);
+for ($i=0; $i < $countRenglones; $i++) {
+    if($rsProyectoDisponible[$i]['idArea'] == "1")
+    {
+        $img = "cienciasagropecuarias.jpg";
+        $border = "border-primary";
+    }
+    else if($rsProyectoDisponible[$i]['idArea'] == "2")
+    {
+        $img = "cienciassalud.jpg";
+        $border = "border-success";
+    }
+    else if($rsProyectoDisponible[$i]['idArea'] == "3")
+    {
+        $img = "Ciencias_Exactas.jpg";
+        $border = "border-info";
+    }
+    else if($rsProyectoDisponible[$i]['idArea'] == "4")
+    {
+        $img = "cienciassociales.jpg";
+        $border = "border-warner";
+    }
+    else if($rsProyectoDisponible[$i]['idArea'] == "5")
+    {
+        $img = "artes.jpg";
+        $border = "border-danger";
+    }
+    else if($rsProyectoDisponible[$i]['idArea'] == "6")
+    {
+        $img = "tecnologia.jpg";
+        $border = "border-secondary";
+    }
+    else
+    {
+        $img = "economia.png";
+        $border = "border-dark";
+    }
+    ?>
+   
+    <div class="card <?php echo $border; ?> mb-3" >
+        <div class="row g-0">
+            <div class="col-md-4">
+                <img src="<?php echo "../../img/".($img); ?>" class="img-fluid rounded-start" alt="...">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <?php echo $rsProyectoDisponible[$i]['Titulo de proyecto']; ?> 
+                    </h5>
+                    <p class="card-text">
+                        <div class="row">
+                            <div class="col-7">
+                                Investigador: <b><?php echo $rsProyectoDisponible[$i]['Investigador a cargo']; ?></b>
+                            </div>
+                            <div class="col-5 text-end">
+                                Carrera: <b><?php echo $rsProyectoDisponible[$i]['Carrera en la que aplica']; ?></b>
+                            </div> 
+                            <div class="col-6">
+                                Modalidad: <b><?php echo ($rsProyectoDisponible[$i]['Modalidad de trabajo'] == 'V' ? 'Virtual' : ($rsProyectoDisponible[$i]['Modalidad de trabajo'] == 'H' ? 'Hibrido' : 'Presencial')); ?></b>
+                            </div>
+                            <div class="col-6">
+                                Lugar: <b><?php echo $rsProyectoDisponible[$i]['Institucion']; ?></b>
+                            </div> 
+                        </div>  
+                    </p>
+                    <p class="card-text">
+                        <div class="row">
+                            <div class="col-12">
+                                <h5>Actividades a realizar</h5>
+                                <?php echo $rsProyectoDisponible[$i]['Actividades a realizar']; ?>
+                            </div>
+                            <div class="col-12">
+                                <h5>Habilidades requeridas</h5>
+                                <?php echo $rsProyectoDisponible[$i]['Habilidades requeridas']; ?>
+                            </div>      
+                        </div>
+                    </p>
+                    <?php
+                    if($_SESSION['idTipoUsuario'] == "5")
+                    echo '<p class="card-text">
+                        <a href="javascript:AplicarSolicitud('.$rsProyectoDisponible[$i]['idProyecto'].');" data-accion="AplicarSolicitud" data-value="'. $rsProyectoDisponible[$i]['idProyecto'] .'"  class="btn btn-success card-link float-end">Aplicar</a>
+                    </p>';
+                    ?>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php
+}
+?>
+
+
+_____
+
+
+
+
+<?php
+if(session_status() !== PHP_SESSION_ACTIVE)
+    session_start();
+include 'proyectodisponible.class.php';
+use ProyectoDisponibleNameSpace\ProyectoDisponible as ProyectoDisponible;
+if(!$_POST)
+{
+    die("Error no puedes estar aqui");
+}
+extract($_POST);
+$proyecto = new ProyectoDisponible($id);
+?>
+<h4><?php echo $proyecto->titulo; ?></h4>
+<div class="col-12">
+    <b>Actividades a realizar:</b><br/><?php echo $proyecto->actividad; ?>
+</div>
+<div class="col-12">
+    <b>Habilidades necesarias:</b><br/><?php echo $proyecto->habilidad; ?>
+</div>
+<div class="col-12">
+    <b>Area:</b><br/><?php echo $proyecto->area; ?>
+</div>
+<div class="col-12">
+    <b>Carrera:</b><br/><?php echo $proyecto->carrera; ?>
+</div>
+<div class="col-12">
+    <b>Cantidad de alumnos requeridos:</b><br/><?php echo $proyecto->cantidadAlumnos; ?>
+</div>
+<div class="col-12">
+    <b>Modalidad:</b><br/><?php echo ($proyecto->modalidad == 'V' ? 'VIRTUAL' : 'PRESENCIAL'); ?>
+</div>
+<hr />
+<form id="frmSolicitud" class="row g-3">
+    <input type="hidden" id="idVerano" name="idVerano" value="<?php echo $_SESSION['idVerano']; ?>" />
+    <input type="hidden" id="idUsuarioAlumno" name="idUsuarioAlumno" value="<?php echo $_SESSION['idUsuario']; ?>" />
+    <input type="hidden" id="idProyecto" name="idProyecto" value="<?php echo $id; ?>" />
+    <input type="hidden" id="numeroVuelta" name="numeroVuelta" value="<?php echo 0; ?>" />
+    <input type="hidden" id="orden" name="orden" value="<?php echo 1; ?>" />
+    <input type="hidden" id="idSolicitud" name="idSolicitud" value="<?php echo 0; ?>" />
+  <div class="col-md-9">
+    <!--label for="txtComentario" class="form-label">Comentario</label-->
+    <input type="hidden" class="form-control" id="txtComentario" name="comentario" value="" />
+  </div>
+  <div class="col-12 text-end">
+    <button id="btnCancelar" type="button" class="btn btn-outline-secondary">Cancelar</button>
+    <button id="btnAceptar" type="button" class="btn btn-primary">Aceptar</button>
+  </div>
+</form>
+
+
+______
+<?php
+    if($_POST)
+        $file = $_POST['file'];
+    else
+        $file = "proyectodisponible.php";
+    $modulo = "Proyectos disponibles";
+    include '../template/template.php';
+?>
+
+
+_____
+
+
+var application = Object.create(app);
+function AplicarSolicitud(id) {
+    /*var data = Array();
+    data.push(id);
+   Catalog.OpenPage(, Array('id'), data);*/
+    Catalog.GetView("realizaSolicitud.php", id);
+}
+$("body").delegate("#btnAceptar", "click", function() {
+    var data = new FormData($("#frmSolicitud")[0]);
+    data.append("method", "Insert");
+    //var application = Object.create(app);
+    application.url = "../solicitud/solicitudController.php";
+    application.sendRequest(data, this, function(data) {
+        if(data.IdInsertado == 1) {
+            Mbox.Show("fas-ok-circle", "Exito", data.mensaje);
+            window.location.href= "inicio.php";
+        }
+        else {
+            Mbox.Error("Atencion", data.mensaje);
+        }
+        setTimeout(function() {
+            $("#btnCancelar").click();
+        }, 1000);
+    });
+})
+.delegate("#btnCancelar", "click", function() {
+    window.location.reload();
+})
+.delegate("#btnBuscar", "click", function() {
+    application.Loading();
+    var idArea = $("#cmbArea").val();
+    var titulo = $("#txtBuscar").val();
+    $("#divPrincipal").load("proyectodisponible.php", {idArea: idArea, descripcion: titulo}, function () {
+        application.DoneLoading();
+    });
+});
+
+
+
+
+
+<USerController class="php------------"><?php
+header('Content-Type: application/json; charset=utf-8');
+require 'usuario.class.php';
+use UsuarioNamespace\Usuario as Usuario;
+if($_POST)
+{
+    extract($_POST);
+    $Usuario = new Usuario();
+    if($method == 'Insert')
+    {
+        $correo = trim($correo);
+        $rsExiste = $Usuario->Select("SELECT idUsuario FROM usuario WHERE upper(correo) = '".strtoupper($correo)."'");
+        if($rsExiste != null && count($rsExiste) > 0)
+        {
+            die('{"mensaje":"El correo ya esta registrado en el sistema","IdInsertado":"-1"}');
+        }
+        $Usuario->idUsuario =   0;
+        $Usuario->idTipoUsuario =$idTipoUsuario;
+        $Usuario->correo =$correo;
+        $password = $Usuario->Select("select SHA1('$clave') as password");
+        $Usuario->clave = $password[0]['password'];
+        $Usuario->nombre =$nombre;
+        $Usuario->apellidoPaterno =$apellidoPaterno;
+        $Usuario->apellidoMaterno =$apellidoMaterno;
+        $Usuario->fechaNacimiento =$fechaNacimiento;
+        $Usuario->genero =$genero;
+        $Usuario->telefono =$telefono;
+        $Usuario->calle =$calle;
+        $Usuario->colonia =$colonia;
+        $Usuario->numero =$numero;
+        $Usuario->codigoPostal =$codigoPostal;
+        $Usuario->idCampus =$idCampus;
+        $Usuario->fechaCreacion =date("Y-m-d H:i:s");
+        $Usuario->fechaModifica =date("Y-m-d H:i:s");
+        $Usuario->validado =0;
+        $Usuario->idUsuarioValida ="null";
+        $Usuario->fechaValida ="null";
+        $Usuario->estatus =1;
+        $idInsertado =  $Usuario->CreateInsert();
+        if($idInsertado > 0)
+        {
+            /*$para  = $correo;
+            $título = 'REGISTRO EXITOSO';
+            $mensaje = '<html>
+            <head>
+              <title>'.$titulo.'</title>
+            </head>
+            <body>
+              <p>Bienvenido al portal del Verano Regional de la Ciencia<br/>Su registro se ha realizado con exito</p>
+            </body>
+            </html>';
+            $cabeceras  = 'MIME-Version: 1.0' . "\r\n";
+            $cabeceras .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+            mail($para, $título, $mensaje, $cabeceras);*/
+            echo '{"mensaje":"Informacion registrada correctamente","IdInsertado":"'.$idInsertado.'"}';
+        }
+        else
+            echo '{"mensaje":"Error al registrar la informacion","IdInsertado":"0"}';
+    }
+    else if($method == 'Update') 
+    {
+        $Usuario = new Usuario($idUsuario);
+        $Usuario->idUsuario =   $idUsuario;
+        $Usuario->idTipoUsuario =$idTipoUsuario;
+        $Usuario->correo =$correo;
+        if ($clave!="")
+        {
+            $password = $Usuario->Select("select SHA1('$clave') as password");
+            $Usuario->clave = $password[0]['password'];
+        }
+        $Usuario->nombre =$nombre;
+        $Usuario->apellidoPaterno =$apellidoPaterno;
+        $Usuario->apellidoMaterno =$apellidoMaterno;
+        $Usuario->fechaNacimiento =$fechaNacimiento;
+        $Usuario->genero =$genero;
+        $Usuario->telefono =$telefono;
+        $Usuario->calle =$calle;
+        $Usuario->colonia =$colonia;
+        $Usuario->numero =$numero;
+        $Usuario->codigoPostal =$codigoPostal;
+        $Usuario->idCampus =$idCampus;
+        $Usuario->fechaModifica =date("Y-m-d H:i:s");
+        $rowsAfectados = $Usuario->CreateUpdate();
+        if($rowsAfectados > 0)
+            echo '{"mensaje":"Informacion registrada correctamente","rowsAfectados":"'.$rowsAfectados.'"}';
+        else
+            echo '{"mensaje":"Error al registrar la informacion","rowsAfectados":"0"}';
+    }
+    else if($method == 'Delete') {
+        $Usuario->idUsuario = $idUsuario;
+        $rowsAfectados = $Usuario->CreateDelete();
+        if($rowsAfectados > 0)
+            echo '{"mensaje":"Informacion eliminada correctamente","rowsAfectados":"'.$rowsAfectados.'"}';
+        else
+            echo '{"mensaje":"Error al eliminar la informacion","rowsAfectados":"0"}';
+    } 
+    else if($method == 'ValidarUsuario')
+    {
+        $rsUsuario = $Usuario->Select("select idUsuario from investigador where idInvestigador=$idInvestigador");
+        $idUsuario = $rsUsuario[0]['idUsuario'];
+        $Usuario->idUsuario = $idUsuario;
+        $rowsAfectados = $Usuario->ValidarUsuario();
+        if($rowsAfectados > 0)
+            echo '{"mensaje":"Usuario validado correctamente","rowsAfectados":"'.$rowsAfectados.'"}';
+        else
+            echo '{"mensaje":"Error al validar el usuario","rowsAfectados":"0"}';
+    }
+    else if($method == 'InvalidarUsuario')
+    {
+        $rsUsuario = $Usuario->Select("select idUsuario from investigador where idInvestigador=$idInvestigador");
+        $idUsuario = $rsUsuario[0]['idUsuario'];
+        $Usuario->idUsuario = $idUsuario;
+        $rowsAfectados = $Usuario->InvalidarUsuario();
+        if($rowsAfectados > 0)
+            echo '{"mensaje":"Usuario invalidado correctamente","rowsAfectados":"'.$rowsAfectados.'"}';
+        else
+            echo '{"mensaje":"Error al invalidar el usuario","rowsAfectados":"0"}';
+    }
+    else if($method == 'ValidarAlumno')
+    {
+        $Documentos = $Usuario->Select("select * from documentoalumno where estatus =1 and idAlumno = $idAlumno");
+        if(count($Documentos) < 7)
+        {
+            die('{"mensaje":"El alumno no tiene documentos cargados aun, no se puede validar","rowsAfectados":"0"}');
+        }
+        $Usuario->idUsuario = $idAlumno;
+        $rowsAfectados = $Usuario->ValidarUsuario();
+        if($rowsAfectados > 0)
+            echo '{"mensaje":"Alumno validado correctamente","rowsAfectados":"'.$rowsAfectados.'"}';
+        else
+            echo '{"mensaje":"Error al validar el usuario","rowsAfectados":"0"}';
+    }
+    else if($method == 'InValidarAlumno')
+    {
+        $rsUsuario = $Usuario->Select("select idUsuario from alumno where idAlumno=$idAlumno");
+        $idUsuario = $rsUsuario[0]['idUsuario'];
+        $Usuario->idUsuario = $idUsuario;
+        $rowsAfectados = $Usuario->InvalidarUsuario();
+        if($rowsAfectados > 0)
+            echo '{"mensaje":"Alumno invalidado correctamente","rowsAfectados":"'.$rowsAfectados.'"}';
+        else
+            echo '{"mensaje":"Error al validar el usuario","rowsAfectados":"0"}';
+    }
+    else if($method == 'Login')
+    {
+        $Usuario = new Usuario();
+        $rsLogin = $Usuario->Select("select * from usuario where correo='$correo' and clave=SHA1('$password') and estatus=1");
+        if($rsLogin != null && count($rsLogin) == 1)
+        {
+            //Usuario existe 
+             $rsAlumno = $Usuario->Select("select * from alumno where idUsuario =  ".$rsLogin[0]['idUsuario']." and estatus=1");
+            if($rsLogin[0]['idTipoUsuario']==5 && ($rsAlumno==null || count($rsAlumno) == 0)) // Si es Alumno y no ha completado el registro 
+            {
+                 session_start();
+            $_SESSION['idUsuario'] = $rsLogin[0]['idUsuario'];
+                 echo '{"mensaje":"Error Registro de Alumno incompleto" ,"acceso":"5"}';
+                 
+            }
+            else
+            {
+            session_start();
+            $_SESSION['idUsuario'] = $rsLogin[0]['idUsuario'];
+            $_SESSION['idTipoUsuario'] = $rsLogin[0]['idTipoUsuario'];
+            $_SESSION['nombre'] = $rsLogin[0]['nombre'].' '.$rsLogin[0]['apellidoPaterno'].' '.$rsLogin[0]['apellidoMaterno'];
+            $_SESSION['idCampus'] = $rsLogin[0]['idCampus'];
+            $rsInstitucion = $Usuario->Select("select idInstitucion from campus where idCampus=".$rsLogin[0]['idCampus']);
+            $_SESSION['idInstitucion'] = $rsInstitucion[0]['idInstitucion'];
+            $rsVerano = $Usuario->Select("select * from verano where estatus=1");
+            $_SESSION['idVerano'] = $rsVerano[0]['idVerano'];
+            $_SESSION['fechaVeranoInicio'] = $rsVerano[0]['fechaVeranoInicio'];
+            $_SESSION['fechaVeranoFin'] = $rsVerano[0]['fechaVeranoFin'];
+            $_SESSION['proyectosPorInvestigador'] = $rsVerano[0]['proyectosPorInvestigador'];
+            $_SESSION['solicitudesPorAlumno'] = $rsVerano[0]['solicitudesPorAlumno'];
+            $_SESSION['alumnosPorProyecto'] = $rsVerano[0]['alumnosPorProyecto'];
+            $_SESSION['fechaCrearSolicitudInicio'] = $rsVerano[0]['fechaCrearSolicitudInicio'];
+            $_SESSION['fechaCrearSolicitudFin'] = $rsVerano[0]['fechaCrearSolicitudFin'];
+            $_SESSION['fechaValidarSolicitudInicio'] = $rsVerano[0]['fechaValidarSolicitudInicio'];
+            $_SESSION['fechaValidarSolicitudFin'] = $rsVerano[0]['fechaValidarSolicitudFin'];
+            echo '{"mensaje":"Usuario validado correctamente","acceso":"1"}';
+            }
+        }
+        else
+            echo '{"mensaje":"Error al ingresar al sistema","acceso":"0"}';
+    }
+    else if($method == 'CambiarPassword')
+    {
+        session_start();
+        $Usuario = new Usuario($_SESSION['idUsuario']);
+        $password = $Usuario->Select("select SHA1('$clave') as password");
+        $Usuario->clave = $password[0]['password'];
+        $rowsAfectados = $Usuario->CreateUpdate();
+        if($rowsAfectados > 0)
+            echo '{"mensaje":"Password actualizado correctamente","rowsAfectados":"'.$rowsAfectados.'"}';
+        else
+            echo '{"mensaje":"Error al cambiar el password","rowsAfectados":"0"}';
+    }
+}
+else
+{
+    extract($_GET);
+    switch ($method) {
+        case 'All':
+            $Usuario = new Usuario();
+            $rsUsuario = $Usuario->SelectAll("usuario", "idUsuario, nombre");
+            echo json_encode($rsUsuario);
+        break;
+        case 'ById':
+            $Usuario = new Usuario($idUsuario);
+            $rsUsuario   = $Usuario->SelectOne("usuario");
+            echo json_encode($rsUsuario);
+        break;
+         default:
+             # code...
+             break;
+     }
+}
+?></USerController>
