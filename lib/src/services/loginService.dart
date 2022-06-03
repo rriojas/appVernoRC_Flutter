@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:preyecto_tecnologico/src/models/menuOptionsInterface.dart';
+import 'package:preyecto_tecnologico/src/models/moduleStudentInterface.dart';
 import 'package:preyecto_tecnologico/src/models/solicitudAceptadaInterface.dart';
 
 class LoginService {
@@ -51,6 +52,8 @@ class LoginService {
     final res = await http.get(Uri.parse(url2), headers: headers);
     final response = menuOptionsInterfaceFromJson(res.body);
 
+    //veranoregional.org/appVerano/modulos/alumnomovil/alumnomovilController.php
+
     return response;
   }
 
@@ -63,6 +66,15 @@ class LoginService {
 
     print(re);
     return re;
+  }
+
+  Future<List<ModuleStudentInterface>> getModuleStudent() async {
+    const url3 =
+        'https://veranoregional.org/appVerano/modulos/alumnomovil/alumnomovilController.php';
+    final re3 = await http.get(Uri.parse(url3), headers: headers);
+    final resp3 = moduleStudentInterfaceFromJson(re3.body);
+
+    return resp3;
   }
 }
 

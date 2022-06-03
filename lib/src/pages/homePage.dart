@@ -5,6 +5,7 @@ import 'package:preyecto_tecnologico/src/pages/auth/myProjectsPage.dart';
 import 'dart:io';
 
 import 'package:preyecto_tecnologico/src/pages/changePasswordPage.dart';
+import 'package:preyecto_tecnologico/src/pages/moduleStudentPage.dart';
 import 'package:preyecto_tecnologico/src/pages/requestAcceptedPage.dart';
 import 'package:preyecto_tecnologico/src/services/loginService.dart';
 
@@ -90,24 +91,24 @@ class _HomePAgeState extends State<HomePAge> {
                   return createItemsOptions(
                     options![index].nombre!,
                     options[index].descripcion,
-                    showRequestAccepted,
+                    options[index].ruta,
                   );
                 });
           }),
     );
   }
 
-  Card createItemsOptions(String title, String? subTitle, Function? onPress) {
+  Card createItemsOptions(String title, String? subTitle, String? onPress) {
     return Card(
       elevation: 5.0,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: ListTile(
-          onTap: () => onPress != null ? onPress() : null,
+          onTap: () => checkOptions(onPress!),
           title: Text(title),
           subtitle: subTitle != null ? Text(subTitle) : null,
           trailing: IconButton(
-            onPressed: () => onPress != null ? onPress() : null,
+            onPressed: () => checkOptions(onPress!),
             icon: const Icon(Icons.arrow_forward_ios),
           ),
         ),
@@ -131,5 +132,18 @@ class _HomePAgeState extends State<HomePAge> {
         builder: (_) => const RequestAcceptedPage(),
       ),
     );
+  }
+
+  checkOptions(String module) {
+    final ruta = module.split('/')[1];
+    print(ruta);
+    switch (ruta) {
+      case 'alumno':
+        Navigator.push(
+            context, MaterialPageRoute(builder: (_) => ModuleStudentPage()));
+
+        break;
+      default:
+    }
   }
 }
