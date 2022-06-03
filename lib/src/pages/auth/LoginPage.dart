@@ -207,8 +207,11 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
               _passwordTextEditingController!.text)
           .then((value) {
         absorb.absorb = false;
-        Navigator.push(
-            context, MaterialPageRoute(builder: (_) => const HomePAge()));
+        if (value) {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (_) => const HomePAge()));
+        }
+
         controller.reverse();
         state = 0;
         borderRadius = 0;
@@ -291,8 +294,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
         setState(() {});
       },
       validator: (onValue) {
-        if (onValue!.length < 7) {
-          return 'Mínimo 8 caracteres';
+        if (onValue!.length < 4) {
+          return 'Mínimo 4 caracteres';
         }
         return null;
       },

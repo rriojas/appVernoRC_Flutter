@@ -46,14 +46,24 @@ class _RequestAcceptedPageState extends State<RequestAcceptedPage> {
                       child: ListTile(
                         title: Text(request?[index].nombreInvestigador ?? ''),
                         subtitle: Text(request?[index].titulo ?? ''),
-                        leading: const Hero(
-                            tag: 'image',
-                            child: Image(
-                              image: AssetImage('assets/tecnologia.jpeg'),
+                        leading: Hero(
+                            tag: 'image$index',
+                            child: const ClipRRect(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(50)),
+                              child: SizedBox(
+                                child: Image(
+                                  image: AssetImage('assets/tecnologia.jpeg'),
+                                  width: 50,
+                                  height: 50,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
                             )),
                         trailing: const Icon(Icons.arrow_forward_ios),
                         onTap: () => showDetailRequestAccepted(
-                            request?[index] as SolicitudAceptadaInterface),
+                            request?[index] as SolicitudAceptadaInterface,
+                            index),
                       ),
                     );
                   }),
@@ -65,12 +75,13 @@ class _RequestAcceptedPageState extends State<RequestAcceptedPage> {
         });
   }
 
-  showDetailRequestAccepted(SolicitudAceptadaInterface request) {
+  showDetailRequestAccepted(SolicitudAceptadaInterface request, num index) {
     Navigator.push(
         context,
         MaterialPageRoute(
             builder: (_) => DetailRequestAcceptedPAge(
                   request: request,
+                  index: index,
                 )));
   }
 }

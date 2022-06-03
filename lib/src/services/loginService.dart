@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
+import 'package:preyecto_tecnologico/src/models/menuOptionsInterface.dart';
 import 'package:preyecto_tecnologico/src/models/solicitudAceptadaInterface.dart';
 
 class LoginService {
@@ -18,7 +19,7 @@ class LoginService {
 
   LoginService._internal();
 
-  Future login(String email, String password) async {
+  Future<bool> login(String email, String password) async {
     final body = {'correo': email, 'password': password, 'method': 'Login'};
 
     const url =
@@ -30,24 +31,26 @@ class LoginService {
       body: body,
     );
 
-    String rawCookie = response.headers['set-cookie']!;
-    int index = rawCookie.indexOf(';');
+    String? rawCookie = response.headers['set-cookie'];
+    int index = rawCookie!.indexOf(';');
     String refreshToken =
         (index == -1) ? rawCookie : rawCookie.substring(0, index);
     int idx = refreshToken.indexOf("=");
 
     headers['cookie'] = 'PHPSESSID=${refreshToken.substring(idx + 1).trim()}';
 
-    /*  const url2 =
-        'https://veranoregional.org/appVerano/modulos/solicitudaceptadamovil/solicitudaceptadamovilcontroller.php';
-    final res = await http.get(Uri.parse(url2), headers: headers);
+    if (rawCookie != null) {
+      return true;
+    }
+    return false;
+  }
 
-    print(headers);
-    print(res);
-    print(res.statusCode);
-    print(res.body);
-    final re = solicitudAceptadaInterfaceFromJson(res.body);
- */
+  Future<List<MenuOptionsInterface>> getMenu() async {
+    const url2 =
+        'https://veranoregional.org/appVerano/modulos/tipousuariomodulo/tipousuariomoduloController.php?method=ByIdTipoUsuario';
+    final res = await http.get(Uri.parse(url2), headers: headers);
+    final response = menuOptionsInterfaceFromJson(res.body);
+
     return response;
   }
 

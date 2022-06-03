@@ -3,7 +3,9 @@ import 'package:preyecto_tecnologico/src/models/solicitudAceptadaInterface.dart'
 
 class DetailRequestAcceptedPAge extends StatelessWidget {
   final SolicitudAceptadaInterface request;
-  const DetailRequestAcceptedPAge({Key? key, required this.request})
+  final num index;
+  const DetailRequestAcceptedPAge(
+      {Key? key, required this.request, required this.index})
       : super(key: key);
 
   @override
@@ -21,8 +23,8 @@ class DetailRequestAcceptedPAge extends StatelessWidget {
     return Card(
       child: Column(
         children: [
-          const Hero(
-              tag: 'image',
+          Hero(
+              tag: 'image$index',
               child: Image(image: AssetImage('assets/tecnologia.jpeg'))),
           Text(
             request.titulo as String,

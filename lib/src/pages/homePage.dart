@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:preyecto_tecnologico/src/models/menuOptionsInterface.dart';
 import 'package:preyecto_tecnologico/src/pages/auth/myProjectsPage.dart';
 import 'dart:io';
 
 import 'package:preyecto_tecnologico/src/pages/changePasswordPage.dart';
 import 'package:preyecto_tecnologico/src/pages/requestAcceptedPage.dart';
+import 'package:preyecto_tecnologico/src/services/loginService.dart';
 
 class HomePAge extends StatefulWidget {
   const HomePAge({Key? key}) : super(key: key);
@@ -14,6 +16,14 @@ class HomePAge extends StatefulWidget {
 }
 
 class _HomePAgeState extends State<HomePAge> {
+  late LoginService service;
+
+  @override
+  void initState() {
+    service = LoginService();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,24 +77,23 @@ class _HomePAgeState extends State<HomePAge> {
   Widget createBody() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: ListView(
-        children: [
-          createItemsOptions(
-              'Mis solicitudes',
-              'Aqui se muestran los proyectos donde has aplicado.',
-              showMyProyects),
-          createItemsOptions(
-              'Proyectos disponibles',
-              'Aqui encontraras los proyectos registrados por los investigadores',
-              null),
-          createItemsOptions(
-            'Solicitudes aceptadas',
-            'Listado de solicitudes aceptadas',
-            showRequestAccepted,
-          ),
-          createItemsOptions('Subir documentos', null, null),
-        ],
-      ),
+      child: FutureBuilder(
+          future: service.getMenu(),
+          builder: (_, AsyncSnapshot<List<MenuOptionsInterface>> data) {
+            if (!data.hasData) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            final options = data.data;
+            return ListView.builder(
+                itemCount: options?.length,
+                itemBuilder: (_, index) {
+                  return createItemsOptions(
+                    options![index].nombre!,
+                    options[index].descripcion,
+                    showRequestAccepted,
+                  );
+                });
+          }),
     );
   }
 
