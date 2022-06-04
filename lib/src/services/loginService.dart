@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:preyecto_tecnologico/src/models/menuOptionsInterface.dart';
 import 'package:preyecto_tecnologico/src/models/moduleStudentInterface.dart';
 import 'package:preyecto_tecnologico/src/models/solicitudAceptadaInterface.dart';
+import 'package:preyecto_tecnologico/src/providers/baseUrl.dart';
 
 class LoginService {
   static final LoginService _loginData = new LoginService._internal();
@@ -23,8 +24,7 @@ class LoginService {
   Future<bool> login(String email, String password) async {
     final body = {'correo': email, 'password': password, 'method': 'Login'};
 
-    const url =
-        'https://veranoregional.org/appVerano/modulos/usuario/usuarioController.php';
+    const url = '$baseUrl/modulos/usuario/usuarioController.php';
 
     final response = await http.post(
       Uri.parse(url),
@@ -32,7 +32,15 @@ class LoginService {
       body: body,
     );
 
+    if (response.statusCode >= 400) {
+      return false;
+    }
+
     String? rawCookie = response.headers['set-cookie'];
+
+    if (rawCookie == null) {
+      return false;
+    }
     int index = rawCookie!.indexOf(';');
     String refreshToken =
         (index == -1) ? rawCookie : rawCookie.substring(0, index);
@@ -40,15 +48,12 @@ class LoginService {
 
     headers['cookie'] = 'PHPSESSID=${refreshToken.substring(idx + 1).trim()}';
 
-    if (rawCookie != null) {
-      return true;
-    }
-    return false;
+    return true;
   }
 
   Future<List<MenuOptionsInterface>> getMenu() async {
     const url2 =
-        'https://veranoregional.org/appVerano/modulos/tipousuariomodulo/tipousuariomoduloController.php?method=ByIdTipoUsuario';
+        '$baseUrl/modulos/tipousuariomodulo/tipousuariomoduloController.php?method=ByIdTipoUsuario';
     final res = await http.get(Uri.parse(url2), headers: headers);
     final response = menuOptionsInterfaceFromJson(res.body);
 
@@ -59,7 +64,7 @@ class LoginService {
 
   Future<List<SolicitudAceptadaInterface>> fetchRequestAccepted() async {
     const url2 =
-        'https://veranoregional.org/appVerano/modulos/solicitudaceptadamovil/solicitudaceptadamovilcontroller.php';
+        '$baseUrl/modulos/solicitudaceptadamovil/solicitudaceptadamovilcontroller.php';
     final res = await http.get(Uri.parse(url2), headers: headers);
     print(res.body);
     final re = solicitudAceptadaInterfaceFromJson(res.body);
@@ -69,10 +74,10 @@ class LoginService {
   }
 
   Future<List<ModuleStudentInterface>> getModuleStudent() async {
-    const url3 =
-        'https://veranoregional.org/appVerano/modulos/alumnomovil/alumnomovilController.php';
+    const url3 = '$baseUrl/modulos/alumnomovil/alumnomovilController.php';
     final re3 = await http.get(Uri.parse(url3), headers: headers);
     final resp3 = moduleStudentInterfaceFromJson(re3.body);
+    print(resp3);
 
     return resp3;
   }

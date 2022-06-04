@@ -59,13 +59,14 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   void initState() {
     loginService = LoginService();
     _userTextEditingController =
-        TextEditingController(text: 'i11050252@monclova.tecnm.mx');
+        // TextEditingController(text: 'i11050252@monclova.tecnm.mx');
+        TextEditingController(text: 'ITSMVA');
     controller = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 400));
 
     _passwordTextEditingController =
-        TextEditingController(text: 'Pa\$\$w0rdmx');
-
+        //   TextEditingController(text: 'Pa\$\$w0rdmx');
+        TextEditingController(text: 'ITSMVA');
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {});
   }
 
@@ -210,11 +211,23 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
         if (value) {
           Navigator.push(
               context, MaterialPageRoute(builder: (_) => const HomePAge()));
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: const Text('Usuario no valido.'),
+            backgroundColor: Colors.redAccent,
+            action: SnackBarAction(
+              onPressed: () {},
+              label: 'OK',
+            ),
+            elevation: 20,
+          ));
         }
-
-        controller.reverse();
-        state = 0;
-        borderRadius = 0;
+        Timer(const Duration(seconds: 3), () {
+          controller.reverse();
+          state = 0;
+          borderRadius = 0;
+          setState(() {});
+        });
       });
 
       //   _absorber.absorb = true;

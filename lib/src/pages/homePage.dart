@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:preyecto_tecnologico/src/models/menuOptionsInterface.dart';
+import 'package:preyecto_tecnologico/src/pages/auth/LoginPage.dart';
 import 'package:preyecto_tecnologico/src/pages/auth/myProjectsPage.dart';
 import 'dart:io';
 
@@ -63,7 +64,10 @@ class _HomePAgeState extends State<HomePAge> {
 
   void exit() async {
     if (Platform.isIOS) {
-      exit();
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (builder) => const LoginPage()),
+          (d) => false);
     }
 
     SystemChannels.platform.invokeMethod('SystemNavigator.pop');
@@ -136,11 +140,16 @@ class _HomePAgeState extends State<HomePAge> {
 
   checkOptions(String module) {
     final ruta = module.split('/')[1];
-    print(ruta);
+
     switch (ruta) {
       case 'alumno':
         Navigator.push(
             context, MaterialPageRoute(builder: (_) => ModuleStudentPage()));
+
+        break;
+      case 'solicitudaceptada':
+        Navigator.push(context,
+            MaterialPageRoute(builder: (_) => const RequestAcceptedPage()));
 
         break;
       default:

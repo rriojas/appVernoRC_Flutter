@@ -48,21 +48,16 @@ class ModuleStudentPage extends StatelessWidget {
                 return Container(
                   color: index % 2 == 0 ? Colors.black12 : Colors.white,
                   child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
+                      Column(
                         children: [
-                          Column(
-                            children: [
-                              Text(rsonse![index].idAlumno!),
-                              Text(rsonse[index].nombreDelAlumno!),
-                              Text(rsonse[index].idCarrera!),
-                              Text(rsonse[index].campus!),
-                              Text(rsonse[index].idUsuario!),
-                              Text(rsonse[index].idCarrera!),
-                              Text('Validado :${rsonse[index].validado!}'),
-                            ],
-                          ),
+                          Text(rsonse![index].idAlumno!),
+                          Text(rsonse[index].matricula!),
+                          Text(rsonse[index].nombreDelAlumno!),
+                          Text(rsonse[index].campus!),
+                          Text(rsonse[index].carrera!),
+                          Text('Validado :${rsonse[index].validado!}'),
                         ],
                       ),
                       Column(
@@ -82,7 +77,7 @@ class ModuleStudentPage extends StatelessWidget {
                               icon: Icon(
                                 (rsonse[index].validado == '1'
                                     ? Icons.cancel_outlined
-                                    : Icons.transit_enterexit_sharp),
+                                    : Icons.delete_forever),
                               ))
                         ],
                       ),
