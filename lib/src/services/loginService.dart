@@ -1,5 +1,4 @@
-import 'dart:convert';
-import 'dart:developer';
+import 'dart:convert' show json;
 import 'package:http/http.dart' as http;
 import 'package:preyecto_tecnologico/src/models/menuOptionsInterface.dart';
 import 'package:preyecto_tecnologico/src/models/moduleStudentInterface.dart';
@@ -7,7 +6,7 @@ import 'package:preyecto_tecnologico/src/models/solicitudAceptadaInterface.dart'
 import 'package:preyecto_tecnologico/src/providers/baseUrl.dart';
 
 class LoginService {
-  static final LoginService _loginData = new LoginService._internal();
+  static final LoginService _loginData = LoginService._internal();
 
   String? guidLoan;
 
@@ -22,6 +21,8 @@ class LoginService {
   LoginService._internal();
 
   Future<bool> login(String email, String password) async {
+    print('quien te invoco');
+
     final body = {'correo': email, 'password': password, 'method': 'Login'};
 
     const url = '$baseUrl/modulos/usuario/usuarioController.php';
@@ -41,7 +42,7 @@ class LoginService {
     if (rawCookie == null) {
       return false;
     }
-    int index = rawCookie!.indexOf(';');
+    int index = rawCookie.indexOf(';');
     String refreshToken =
         (index == -1) ? rawCookie : rawCookie.substring(0, index);
     int idx = refreshToken.indexOf("=");
@@ -64,7 +65,7 @@ class LoginService {
 
   Future<List<SolicitudAceptadaInterface>> fetchRequestAccepted() async {
     const url2 =
-        '$baseUrl/modulos/solicitudaceptadamovil/solicitudaceptadamovilcontroller.php';
+        '$baseUrl/modulos/solicitudaceptada/solicitudaceptadacontroller.php';
     final res = await http.get(Uri.parse(url2), headers: headers);
     print(res.body);
     final re = solicitudAceptadaInterfaceFromJson(res.body);
@@ -74,40 +75,11 @@ class LoginService {
   }
 
   Future<List<ModuleStudentInterface>> getModuleStudent() async {
-    const url3 = '$baseUrl/modulos/alumnomovil/alumnomovilController.php';
+    const url3 = '$baseUrl/modulos/alumno/alumnoController.php';
     final re3 = await http.get(Uri.parse(url3), headers: headers);
     final resp3 = moduleStudentInterfaceFromJson(re3.body);
     print(resp3);
 
     return resp3;
   }
-}
-
-// To parse this JSON data, do
-//
-//     final loginResponse = loginResponseFromJson(jsonString);
-
-LoginResponse loginResponseFromJson(String str) =>
-    LoginResponse.fromJson(json.decode(str));
-
-String loginResponseToJson(LoginResponse data) => json.encode(data.toJson());
-
-class LoginResponse {
-  LoginResponse({
-    this.mensaje,
-    this.acceso,
-  });
-
-  final String? mensaje;
-  final String? acceso;
-
-  factory LoginResponse.fromJson(Map<String, dynamic> json) => LoginResponse(
-        mensaje: json["mensaje"] == null ? null : json["mensaje"],
-        acceso: json["acceso"] == null ? null : json["acceso"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "mensaje": mensaje == null ? null : mensaje,
-        "acceso": acceso == null ? null : acceso,
-      };
 }
