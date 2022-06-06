@@ -1,7 +1,10 @@
 import 'dart:convert' show json;
 import 'package:http/http.dart' as http;
+import 'package:preyecto_tecnologico/src/models/campusModuleInterface.dart';
+import 'package:preyecto_tecnologico/src/models/investigatorModuleInterface.dart';
 import 'package:preyecto_tecnologico/src/models/menuOptionsInterface.dart';
 import 'package:preyecto_tecnologico/src/models/moduleStudentInterface.dart';
+import 'package:preyecto_tecnologico/src/models/projectModuleInterface.dart';
 import 'package:preyecto_tecnologico/src/models/solicitudAceptadaInterface.dart';
 import 'package:preyecto_tecnologico/src/providers/baseUrl.dart';
 
@@ -21,17 +24,18 @@ class LoginService {
   LoginService._internal();
 
   Future<bool> login(String email, String password) async {
-    print('quien te invoco');
-
     final body = {'correo': email, 'password': password, 'method': 'Login'};
 
+    print(body);
     const url = '$baseUrl/modulos/usuario/usuarioController.php';
+    print(url);
 
     final response = await http.post(
       Uri.parse(url),
       headers: headers,
       body: body,
     );
+    print(response.statusCode);
 
     if (response.statusCode >= 400) {
       return false;
@@ -65,21 +69,52 @@ class LoginService {
 
   Future<List<SolicitudAceptadaInterface>> fetchRequestAccepted() async {
     const url2 =
-        '$baseUrl/modulos/solicitudaceptada/solicitudaceptadacontroller.php';
+        '$baseUrl/modulos/solicitudaceptada/solicitudaceptadacontroller.php?method=All&idSolicitudAceptada=1384';
     final res = await http.get(Uri.parse(url2), headers: headers);
     print(res.body);
+
     final re = solicitudAceptadaInterfaceFromJson(res.body);
 
-    print(re);
     return re;
   }
 
   Future<List<ModuleStudentInterface>> getModuleStudent() async {
     const url3 = '$baseUrl/modulos/alumno/alumnoController.php';
     final re3 = await http.get(Uri.parse(url3), headers: headers);
+
     final resp3 = moduleStudentInterfaceFromJson(re3.body);
-    print(resp3);
 
     return resp3;
+  }
+
+  Future<List<CampusModuleInterface>> getModuleCampus() async {
+    const url3 = '$baseUrl/modulos/campus/campusController.php?';
+
+    final response = await http.get(Uri.parse(url3), headers: headers);
+
+    final campus = campusModuleInterfaceFromJson(response.body);
+
+    return campus;
+  }
+
+  Future<List<InvestigatorModuleInterface>> getInvestigatorModule() async {
+    const url3 = '$baseUrl/modulos/investigador/investigadorController.php?';
+
+    final response = await http.get(Uri.parse(url3), headers: headers);
+
+    final investators = investigatorModuleInterfaceFromJson(response.body);
+
+    getProyectoModule();
+    return investators;
+  }
+
+  Future<List<ProjectModuleInterface>> getProyectoModule() async {
+    const url = '$baseUrl/modulos/proyecto/proyectoController.php?method=All';
+
+    final response = await http.get(Uri.parse(url), headers: headers);
+
+    final projects = projectModuleInterfaceFromJson(response.body);
+
+    return projects;
   }
 }

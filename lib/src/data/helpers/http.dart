@@ -39,7 +39,6 @@ class Http {
           },
         );
       }
-      print(body);
 
       final response = await sendRequest(
         url: url,
@@ -69,8 +68,6 @@ class Http {
           data: null,
         );
       }
-
-      print(e);
 
       return HttpResult<T>(
         statusCode: -1,
