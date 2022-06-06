@@ -52,74 +52,40 @@ class SolicitudAceptadaInterface {
 
   factory SolicitudAceptadaInterface.fromJson(Map<String, dynamic> json) =>
       SolicitudAceptadaInterface(
-        idSolicitud: json["idSolicitud"] == null ? null : json["idSolicitud"],
-        nombreDelAlumno: json["Nombre del Alumno"] == null
-            ? null
-            : json["Nombre del Alumno"],
-        institucionDelAlumno: json["Institucion del Alumno"] == null
-            ? null
-            : json["Institucion del Alumno"],
-        titulo: json["Titulo del Proyecto"] == null
-            ? null
-            : json["Titulo del Proyecto"],
-        nombreInvestigador: json["Nombre del investigador"] == null
-            ? null
-            : json["Nombre del investigador"],
-        institucionDelInvestigador: json["Institucion del Investigador"] == null
-            ? null
-            : json["Institucion del Investigador"],
-        idUsuarioAlumno:
-            json["idUsuarioAlumno"] == null ? null : json["idUsuarioAlumno"],
-        idUsuarioInvestigador: json["idUsuarioInvestigador"] == null
-            ? null
-            : json["idUsuarioInvestigador"],
-        idCampusInvestigador: json["idCampusInvestigador"] == null
-            ? null
-            : json["idCampusInvestigador"],
-        idCampusAlumno:
-            json["idCampusAlumno"] == null ? null : json["idCampusAlumno"],
-        idInstitucionInvestigador: json["idInstitucionInvestigador"] == null
-            ? null
-            : json["idInstitucionInvestigador"],
-        idInstitucionAlumno: json["Institucion del alumno"] == null
-            ? null
-            : json["Institucion del alumno"],
-        correoAlumno: json["Correo del Alumno"] == null
-            ? null
-            : json["Correo del Alumno"],
-        correoInvestigador: json["Correo del Investigad"] == null
-            ? null
-            : json["Correo del Investigad"],
-        modalidad: json["Modalidad"] == null ? null : json["Modalidad"],
-        estatus: json["estatus"] == null ? null : json["estatus"],
+        idSolicitud: json["idSolicitud"],
+        nombreDelAlumno: json["Nombre del Alumno"],
+        institucionDelAlumno: json["Institucion del Alumno"],
+        titulo: json["titulo"],
+        nombreInvestigador: json["nombreInvestigador"],
+        institucionDelInvestigador: json["Institucion del Investigador"],
+        idUsuarioAlumno: json["idUsuarioAlumno"],
+        idUsuarioInvestigador: json["idUsuarioInvestigador"],
+        idCampusInvestigador: json["idCampusInvestigador"],
+        idCampusAlumno: json["idCampusAlumno"],
+        idInstitucionInvestigador: json["idInstitucionInvestigador"],
+        idInstitucionAlumno: json["Institucion del alumno"],
+        correoAlumno: json["Correo del Alumno"],
+        correoInvestigador: json["Correo del Investigad"],
+        modalidad: json["Modalidad"],
+        estatus: json["estatus"],
       );
 
   Map<String, dynamic> toJson() => {
-        "idSolicitud": idSolicitud == null ? null : idSolicitud,
-        "Nombre del Alumno": nombreDelAlumno == null ? null : nombreDelAlumno,
-        "Institucion del Alumno":
-            institucionDelAlumno == null ? null : institucionDelAlumno,
-        "Titulo del Proyecto": titulo == null ? null : titulo,
-        "Nombre del investigador":
-            nombreInvestigador == null ? null : nombreInvestigador,
-        "Institucion del Investigador": institucionDelInvestigador == null
-            ? null
-            : institucionDelInvestigador,
-        "idUsuarioAlumno": idUsuarioAlumno == null ? null : idUsuarioAlumno,
-        "idUsuarioInvestigador":
-            idUsuarioInvestigador == null ? null : idUsuarioInvestigador,
-        "idCampusInvestigador":
-            idCampusInvestigador == null ? null : idCampusInvestigador,
-        "idCampusAlumno": idCampusAlumno == null ? null : idCampusAlumno,
-        "idInstitucionInvestigador": idInstitucionInvestigador == null
-            ? null
-            : idInstitucionInvestigador,
-        "Institucion del alumno":
-            idInstitucionAlumno == null ? null : idInstitucionAlumno,
-        "Correo del Alumno": correoAlumno == null ? null : correoAlumno,
-        "Correo del Investigad":
-            correoInvestigador == null ? null : correoInvestigador,
-        "Modalidad": modalidad == null ? null : modalidad,
-        "estatus": estatus == null ? null : estatus,
+        "idSolicitud": idSolicitud,
+        "Nombre del Alumno": nombreDelAlumno,
+        "Institucion del Alumno": institucionDelAlumno,
+        "Titulo del Proyecto": titulo,
+        "Nombre del investigador": nombreInvestigador,
+        "Institucion del Investigador": institucionDelInvestigador,
+        "idUsuarioAlumno": idUsuarioAlumno,
+        "idUsuarioInvestigador": idUsuarioInvestigador,
+        "idCampusInvestigador": idCampusInvestigador,
+        "idCampusAlumno": idCampusAlumno,
+        "idInstitucionInvestigador": idInstitucionInvestigador,
+        "Institucion del alumno": idInstitucionAlumno,
+        "Correo del Alumno": correoAlumno,
+        "Correo del Investigad": correoInvestigador,
+        "Modalidad": modalidad,
+        "estatus": estatus,
       };
 }

@@ -1,5 +1,5 @@
 //localhost
-const baseUrl = 'http://localhost/appverano';
+const baseUrl = 'http://localhost/api';
 
 //Production
 //const baseUrl = 'https://veranoregional.org/appVerano';

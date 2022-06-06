@@ -6,7 +6,10 @@ import 'package:preyecto_tecnologico/src/pages/auth/myProjectsPage.dart';
 import 'dart:io';
 
 import 'package:preyecto_tecnologico/src/pages/changePasswordPage.dart';
-import 'package:preyecto_tecnologico/src/pages/moduleStudentPage.dart';
+import 'package:preyecto_tecnologico/src/pages/modules/campus/campusModulePage.dart';
+import 'package:preyecto_tecnologico/src/pages/modules/investigator/investigatorModulePage.dart';
+import 'package:preyecto_tecnologico/src/pages/modules/project/projectModulePage.dart';
+import 'package:preyecto_tecnologico/src/pages/modules/student/studentModulePage.dart';
 import 'package:preyecto_tecnologico/src/pages/requestAcceptedPage.dart';
 import 'package:preyecto_tecnologico/src/services/loginService.dart';
 
@@ -147,9 +150,26 @@ class _HomePAgeState extends State<HomePAge> {
             context, MaterialPageRoute(builder: (_) => ModuleStudentPage()));
 
         break;
+      case 'campus':
+        Navigator.push(
+            context, MaterialPageRoute(builder: (_) => CampusModulePage()));
+
+        break;
       case 'solicitudaceptada':
         Navigator.push(context,
             MaterialPageRoute(builder: (_) => const RequestAcceptedPage()));
+
+        break;
+
+      case 'investigador':
+        Navigator.push(context,
+            MaterialPageRoute(builder: (_) => InvestigatorModulePage()));
+
+        break;
+
+      case 'proyecto':
+        Navigator.push(
+            context, MaterialPageRoute(builder: (_) => ProjectModulePage()));
 
         break;
       default:
