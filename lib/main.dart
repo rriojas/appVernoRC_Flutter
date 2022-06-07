@@ -36,7 +36,7 @@ class _MyAppState extends State<MyApp> {
           debugShowCheckedModeBanner: false,
           title: 'Flutter Demo',
           theme: ThemeData(
-            primarySwatch: Colors.blue,
+            primarySwatch: Colors.orange,
             inputDecorationTheme: const InputDecorationTheme(
               border: OutlineInputBorder(),
               contentPadding: EdgeInsets.symmetric(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:preyecto_tecnologico/src/models/solicitudAceptadaInterface.dart';
 import 'package:preyecto_tecnologico/src/pages/detailRequestAcceptedPage.dart';
 import 'package:preyecto_tecnologico/src/services/loginService.dart';
+import 'package:preyecto_tecnologico/src/utils/utils.dart';
 
 class RequestAcceptedPage extends StatefulWidget {
   const RequestAcceptedPage({Key? key}) : super(key: key);
@@ -12,6 +13,7 @@ class RequestAcceptedPage extends StatefulWidget {
 
 class _RequestAcceptedPageState extends State<RequestAcceptedPage> {
   late LoginService fetchRequestAccepted;
+  late Utils utils;
 
   @override
   void initState() {
@@ -24,6 +26,7 @@ class _RequestAcceptedPageState extends State<RequestAcceptedPage> {
 
   @override
   Widget build(BuildContext context) {
+    utils = Utils();
     return Scaffold(
       appBar: AppBar(),
       body: createBody(),
@@ -44,7 +47,8 @@ class _RequestAcceptedPageState extends State<RequestAcceptedPage> {
                   itemBuilder: (_, index) {
                     return Card(
                       child: ListTile(
-                        title: Text(request?[index].nombreInvestigador ?? ''),
+                        title: Text(utils.capitalizer(
+                            request?[index].nombreInvestigador ?? '')),
                         subtitle: Text(request?[index].titulo ?? ''),
                         leading: Hero(
                             tag: 'image$index',
