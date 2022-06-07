@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:preyecto_tecnologico/src/models/moduleStudentInterface.dart';
 import 'package:preyecto_tecnologico/src/pages/modules/student/detailsStudentPage.dart';
 import 'package:preyecto_tecnologico/src/services/loginService.dart';
+import 'package:preyecto_tecnologico/src/utils/utils.dart';
 
 class ModuleStudentPage extends StatelessWidget {
   ModuleStudentPage({Key? key}) : super(key: key);
 
   late LoginService service;
+  Utils capitalizer = Utils();
 
   @override
   Widget build(BuildContext context) {
@@ -14,6 +16,11 @@ class ModuleStudentPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(' Alumnos'),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: const Icon(Icons.add),
+        tooltip: 'Agregar alumno',
       ),
       body: createBody(context),
     );
@@ -44,7 +51,7 @@ class ModuleStudentPage extends StatelessWidget {
     return Card(
       elevation: 5,
       child: ListTile(
-        title: Text(student.nombreDelAlumno ?? ' '),
+        title: Text(capitalizer.capitalizer(student.nombreDelAlumno ?? '')),
         subtitle: Text(student.campus ?? ' '),
         trailing: const Icon(Icons.arrow_forward_ios),
         onTap: () {

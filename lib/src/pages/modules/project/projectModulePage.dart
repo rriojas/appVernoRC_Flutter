@@ -10,7 +10,7 @@ class ProjectModulePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(' Alumnos'),
+        title: const Text(' Proyectos'),
       ),
       body: createBody(context),
     );
@@ -18,7 +18,7 @@ class ProjectModulePage extends StatelessWidget {
 
   createBody(BuildContext context) {
     return FutureBuilder(
-        future: service.getProyectoModule(),
+        future: service.getProjectModule(),
         builder: (_, AsyncSnapshot<List<ProjectModuleInterface>> data) {
           if (!data.hasData) {
             return const Center(

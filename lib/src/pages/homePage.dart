@@ -9,6 +9,7 @@ import 'package:preyecto_tecnologico/src/pages/changePasswordPage.dart';
 import 'package:preyecto_tecnologico/src/pages/modules/campus/campusModulePage.dart';
 import 'package:preyecto_tecnologico/src/pages/modules/investigator/investigatorModulePage.dart';
 import 'package:preyecto_tecnologico/src/pages/modules/project/projectModulePage.dart';
+import 'package:preyecto_tecnologico/src/pages/modules/proyects/availableProjectsPage.dart';
 import 'package:preyecto_tecnologico/src/pages/modules/student/studentModulePage.dart';
 import 'package:preyecto_tecnologico/src/pages/requestAcceptedPage.dart';
 import 'package:preyecto_tecnologico/src/services/loginService.dart';
@@ -170,6 +171,12 @@ class _HomePAgeState extends State<HomePAge> {
       case 'proyecto':
         Navigator.push(
             context, MaterialPageRoute(builder: (_) => ProjectModulePage()));
+
+        break;
+        print(ruta);
+      case 'proyectodisponible':
+        Navigator.push(context,
+            MaterialPageRoute(builder: (_) => AvailableProjectsPage()));
 
         break;
       default:

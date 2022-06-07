@@ -1,5 +1,6 @@
 import 'dart:convert' show json;
 import 'package:http/http.dart' as http;
+import 'package:preyecto_tecnologico/src/models/availableProjectsInterface.dart';
 import 'package:preyecto_tecnologico/src/models/campusModuleInterface.dart';
 import 'package:preyecto_tecnologico/src/models/investigatorModuleInterface.dart';
 import 'package:preyecto_tecnologico/src/models/menuOptionsInterface.dart';
@@ -69,9 +70,8 @@ class LoginService {
 
   Future<List<SolicitudAceptadaInterface>> fetchRequestAccepted() async {
     const url2 =
-        '$baseUrl/modulos/solicitudaceptada/solicitudaceptadacontroller.php?method=All&idSolicitudAceptada=1384';
+        '$baseUrl/modulos/solicitudaceptada/solicitudaceptadacontroller.php';
     final res = await http.get(Uri.parse(url2), headers: headers);
-    print(res.body);
 
     final re = solicitudAceptadaInterfaceFromJson(res.body);
 
@@ -104,11 +104,11 @@ class LoginService {
 
     final investators = investigatorModuleInterfaceFromJson(response.body);
 
-    getProyectoModule();
+    getProjectModule();
     return investators;
   }
 
-  Future<List<ProjectModuleInterface>> getProyectoModule() async {
+  Future<List<ProjectModuleInterface>> getProjectModule() async {
     const url = '$baseUrl/modulos/proyecto/proyectoController.php?method=All';
 
     final response = await http.get(Uri.parse(url), headers: headers);
@@ -116,5 +116,15 @@ class LoginService {
     final projects = projectModuleInterfaceFromJson(response.body);
 
     return projects;
+  }
+
+  Future<List<AvailableProjectsModuleInterface>>
+      getAvailableProyectModule() async {
+    const url = '$baseUrl/modulos/proyectodisponible/proyectodisponible.php';
+
+    final response = await http.get(Uri.parse(url), headers: headers);
+    final proyects = availableProjectsModuleInterfaceFromJson(response.body);
+
+    return proyects;
   }
 }
