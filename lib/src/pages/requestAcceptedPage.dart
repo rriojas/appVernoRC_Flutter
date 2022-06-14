@@ -20,8 +20,6 @@ class _RequestAcceptedPageState extends State<RequestAcceptedPage> {
     fetchRequestAccepted = LoginService();
     // TODO: implement initState
     super.initState();
-
-    WidgetsBinding.instance?.addPostFrameCallback((_) => {});
   }
 
   @override
