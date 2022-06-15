@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:preyecto_tecnologico/src/models/moduleStudentInterface.dart';
+import 'package:preyecto_tecnologico/src/pages/modules/student/addStudentPage.dart';
 import 'package:preyecto_tecnologico/src/pages/modules/student/detailsStudentPage.dart';
 import 'package:preyecto_tecnologico/src/services/loginService.dart';
 import 'package:preyecto_tecnologico/src/utils/utils.dart';
@@ -18,7 +19,14 @@ class ModuleStudentPage extends StatelessWidget {
         title: const Text(' Alumnos'),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => AddStudentPage(),
+            ),
+          );
+        },
         child: const Icon(Icons.add),
         tooltip: 'Agregar alumno',
       ),
