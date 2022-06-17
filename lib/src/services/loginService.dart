@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert' show json;
 import 'package:http/http.dart' as http;
 import 'package:preyecto_tecnologico/src/models/availableProjectsInterface.dart';
@@ -24,6 +25,14 @@ class LoginService {
   }
 
   LoginService._internal();
+
+  final _institutionController =
+      StreamController<InstitutionCampusAvailable>.broadcast();
+  Stream<InstitutionCampusAvailable> get getInstitutionStream =>
+      _institutionController.stream;
+  void setInstitution(InstitutionCampusAvailable ins) {
+    _institutionController.add(ins);
+  }
 
   Future<bool> login(String email, String password) async {
     final body = {'correo': email, 'password': password, 'method': 'Login'};
@@ -129,7 +138,7 @@ class LoginService {
     return proyects;
   }
 
-  Future getAvailableInstitutions() async {
+  Future<InstitutionCampusAvailable> getAvailableInstitutions() async {
     const url =
         '$baseUrl/modulos/usuario/instituciones.php?id=5&idTipoUsuario=5';
     final body = {'id': '5', 'method': 'Login'};
@@ -137,8 +146,8 @@ class LoginService {
     final response =
         await http.post(Uri.parse(url), headers: headers, body: body);
     final data = institutionCampusAvailableFromJson(response.body);
-    print(data.instituciones![0].descripcion);
-    print(data.campus![0].descripcion);
-    return null;
+
+    setInstitution(data);
+    return data;
   }
 }

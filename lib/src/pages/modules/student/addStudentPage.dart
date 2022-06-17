@@ -1,30 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-import 'package:preyecto_tecnologico/src/pages/modules/student/settingsStudent.dart';
+import 'package:preyecto_tecnologico/src/pages/modules/student/widgets/myDropdown.dart';
+
 import 'package:reactive_forms/reactive_forms.dart';
 
-import 'package:date_format/date_format.dart';
-
 import 'widgets/createMyTextFormField.dart';
-import 'widgets/myDropdownGender.dart';
 import 'widgets/myTextFormBirthday.dart';
+import 'package:preyecto_tecnologico/src/pages/modules/student/settingsStudent.dart';
 
-class AddStudentPage extends StatefulWidget {
-  const AddStudentPage({Key? key}) : super(key: key);
+class AddStudentPage extends StatelessWidget {
+  AddStudentPage({Key? key}) : super(key: key);
 
-  @override
-  State<AddStudentPage> createState() => _AddStudentPageState();
-}
-
-class _AddStudentPageState extends State<AddStudentPage> {
   late GlobalKey<FormState> _formKey;
 
   late FormGroup fg;
 
   Map<String, TextEditingController> textEditingControllers = {};
 
-  var textFields = <Widget>[];
+  var allWidgets = <Widget>[];
 
   @override
   Map<String, FormControl> mapReactiveForm = {};
@@ -35,56 +28,70 @@ class _AddStudentPageState extends State<AddStudentPage> {
   Widget build(BuildContext context) {
     keys.clear();
     mapReactiveForm.clear();
-    textFields.clear();
+    allWidgets.clear();
     textEditingControllers.clear();
 
-    listTextFieldMap.forEach((element) {
+    for (var element in listTextFieldMap) {
       keys.add(element.keys.toString().replaceAll('(', '').replaceAll(')', ''));
-    });
+    }
 
-    for (int i = 0; i < keys.length; i++) {
-      final a = listTextFieldMap[i][keys[i]];
-      final b = a
-          ?.putIfAbsent('validators', () => () => [])
-          .call()
-          .map((e) =>
+    for (int i = 0; i < listTextFieldMap.length; i++) {
+      final validators = listTextFieldMap[i][keys[i]]?['validators']
+          ?.map((e) =>
               e as Map<String, dynamic>? Function(AbstractControl<dynamic>))
           .toList();
 
-      final c = a
-          ?.putIfAbsent('inputFormatted', () => () => [])
-          .call()
-          .map((e) => e as TextInputFormatter)
+      final inputFormatted = listTextFieldMap[i][keys[i]]?['inputFormatted']
+          ?.map((e) => e as TextInputFormatter)
           .toList();
 
-      var item = FormControl(validators: b!);
-      mapReactiveForm.putIfAbsent(keys[i], () => item);
+      FormControl<String> item = FormControl(validators: validators!);
 
       var textEdit = TextEditingController();
 
-      if (keys[i] == 'Genero') {
-        textFields.add(
-          MyDropdownGender(
+      if (keys[i] == 'Escuela/Facultad/Centro de investigación') {
+        allWidgets.add(
+          MyDropdown(
             controller: textEdit,
+            label: keys[i],
+            stream: service.getInstitutionStream,
+          ),
+        );
+      } else if (keys[i] == 'Institución') {
+        allWidgets.add(
+          MyDropdown(
+            controller: textEdit,
+            label: keys[i],
+            stream: service.getInstitutionStream,
+          ),
+        );
+      } else if (keys[i] == 'Genero') {
+        allWidgets.add(
+          MyDropdown(
+            controller: textEdit,
+            label: keys[i],
+            stream: service.getInstitutionStream,
           ),
         );
       } else if (keys[i] == 'Fecha de nacimiento') {
-        textFields.add(MyTextFormBirthday(
+        allWidgets.add(MyTextFormBirthday(
           controller: textEdit,
+          label: keys[i],
         ));
       } else {
-        textFields.add(CreateMyTextFormField(
+        allWidgets.add(CreateMyTextFormField(
           controller: textEdit,
           label: keys[i],
           fcn: keys[i],
-          inputFormated: c,
+          inputFormated: inputFormatted,
         ));
       }
+      mapReactiveForm.putIfAbsent(keys[i], () => item);
 
       textEditingControllers.putIfAbsent(keys[i], () => textEdit);
     }
 
-    textFields.addAll([
+    allWidgets.addAll([
       SizedBox(
         width: double.infinity,
         height: 50,
@@ -122,7 +129,7 @@ class _AddStudentPageState extends State<AddStudentPage> {
           formGroup: fg,
           key: _formKey,
           child: Column(
-            children: textFields
+            children: allWidgets
                 .map((e) => Container(
                       padding: const EdgeInsets.only(top: 15.0),
                       child: e,

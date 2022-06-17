@@ -1,11 +1,14 @@
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 class MyTextFormBirthday extends StatefulWidget {
   final TextEditingController controller;
+  final String label;
   const MyTextFormBirthday({
     Key? key,
     required this.controller,
+    required this.label,
   }) : super(key: key);
 
   @override
@@ -15,7 +18,8 @@ class MyTextFormBirthday extends StatefulWidget {
 class _MyTextFormBirthdayState extends State<MyTextFormBirthday> {
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
+    return ReactiveTextField(
+      formControlName: widget.label,
       decoration: const InputDecoration(
         label: Text('Fecha de nacimiento'),
       ),
@@ -23,6 +27,14 @@ class _MyTextFormBirthdayState extends State<MyTextFormBirthday> {
       onTap: () {
         _selectDate(context, widget.controller);
         FocusScope.of(context).requestFocus(FocusNode());
+      },
+      validationMessages: (error) {
+        return {
+          'required': 'Campo requerido',
+          'minLength': 'Minímo requerido',
+          ValidationMessage.pattern: 'Formato ínvalido',
+          ValidationMessage.email: 'Correo invalido'
+        };
       },
     );
   }
@@ -42,7 +54,7 @@ class _MyTextFormBirthdayState extends State<MyTextFormBirthday> {
         .then((onValue) {
       if (onValue != null) {
         final dateTemp = DateTime.parse(onValue.toString());
-        print(dateTemp);
+
         controller.text =
             formatDate(dateTemp, [yyyy, '-', mm, '-', dd]).toString();
         setState(() {});
