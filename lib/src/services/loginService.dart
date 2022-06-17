@@ -2,6 +2,7 @@ import 'dart:convert' show json;
 import 'package:http/http.dart' as http;
 import 'package:preyecto_tecnologico/src/models/availableProjectsInterface.dart';
 import 'package:preyecto_tecnologico/src/models/campusModuleInterface.dart';
+import 'package:preyecto_tecnologico/src/models/institutionCampusAvailable.dart';
 import 'package:preyecto_tecnologico/src/models/investigatorModuleInterface.dart';
 import 'package:preyecto_tecnologico/src/models/menuOptionsInterface.dart';
 import 'package:preyecto_tecnologico/src/models/moduleStudentInterface.dart';
@@ -124,7 +125,20 @@ class LoginService {
 
     final response = await http.get(Uri.parse(url), headers: headers);
     final proyects = availableProjectsModuleInterfaceFromJson(response.body);
-
+    getAvailableInstitutions();
     return proyects;
+  }
+
+  Future getAvailableInstitutions() async {
+    const url =
+        '$baseUrl/modulos/usuario/instituciones.php?id=5&idTipoUsuario=5';
+    final body = {'id': '5', 'method': 'Login'};
+
+    final response =
+        await http.post(Uri.parse(url), headers: headers, body: body);
+    final data = institutionCampusAvailableFromJson(response.body);
+    print(data.instituciones![0].descripcion);
+    print(data.campus![0].descripcion);
+    return null;
   }
 }

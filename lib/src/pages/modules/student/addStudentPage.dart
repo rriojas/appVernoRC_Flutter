@@ -1,5 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:preyecto_tecnologico/src/pages/modules/student/settingsStudent.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+
+import 'package:date_format/date_format.dart';
+
+import 'widgets/createMyTextFormField.dart';
+import 'widgets/myDropdownGender.dart';
+import 'widgets/myTextFormBirthday.dart';
 
 class AddStudentPage extends StatefulWidget {
   const AddStudentPage({Key? key}) : super(key: key);
@@ -9,68 +18,103 @@ class AddStudentPage extends StatefulWidget {
 }
 
 class _AddStudentPageState extends State<AddStudentPage> {
-  final listTextField = [
-    'Nombre',
-    'Apellido paterno',
-    'Apellido materno',
-    'Calle',
-    'Numero',
-    'Colonia',
-    'Codígo postal',
-    'Fecha de nacimiento',
-    'Genero',
-    'Telefono',
-    'Institución',
-    'Escuela/Facultad/Centro de investigación',
-    'Correo',
-    'Contraseña',
-    'Confirma contraseña'
-  ];
-
   late GlobalKey<FormState> _formKey;
 
   late FormGroup fg;
+
   Map<String, TextEditingController> textEditingControllers = {};
+
   var textFields = <Widget>[];
+
   @override
-  void initState() {
-    createFormBuilder();
-    for (var element in listTextField) {
-      var textEdit = TextEditingController();
-      textEditingControllers.putIfAbsent(element, () => textEdit);
-      textFields.add(CreateMyTextFormField(
-        controller: textEdit,
-        label: element,
-        fcn: element,
-      ));
-    }
-
-    super.initState();
-  }
-
   Map<String, FormControl> mapReactiveForm = {};
 
-  createFormBuilder() {
-    for (var element in listTextField) {
-      var item = FormControl(validators: [Validators.required]);
-      mapReactiveForm.putIfAbsent(element, () => item);
-    }
-
-    fg = FormGroup(mapReactiveForm);
-  }
+  List keys = [];
 
   @override
   Widget build(BuildContext context) {
+    keys.clear();
+    mapReactiveForm.clear();
+    textFields.clear();
+    textEditingControllers.clear();
+
+    listTextFieldMap.forEach((element) {
+      keys.add(element.keys.toString().replaceAll('(', '').replaceAll(')', ''));
+    });
+
+    for (int i = 0; i < keys.length; i++) {
+      final a = listTextFieldMap[i][keys[i]];
+      final b = a
+          ?.putIfAbsent('validators', () => () => [])
+          .call()
+          .map((e) =>
+              e as Map<String, dynamic>? Function(AbstractControl<dynamic>))
+          .toList();
+
+      final c = a
+          ?.putIfAbsent('inputFormatted', () => () => [])
+          .call()
+          .map((e) => e as TextInputFormatter)
+          .toList();
+
+      var item = FormControl(validators: b!);
+      mapReactiveForm.putIfAbsent(keys[i], () => item);
+
+      var textEdit = TextEditingController();
+
+      if (keys[i] == 'Genero') {
+        textFields.add(
+          MyDropdownGender(
+            controller: textEdit,
+          ),
+        );
+      } else if (keys[i] == 'Fecha de nacimiento') {
+        textFields.add(MyTextFormBirthday(
+          controller: textEdit,
+        ));
+      } else {
+        textFields.add(CreateMyTextFormField(
+          controller: textEdit,
+          label: keys[i],
+          fcn: keys[i],
+          inputFormated: c,
+        ));
+      }
+
+      textEditingControllers.putIfAbsent(keys[i], () => textEdit);
+    }
+
+    textFields.addAll([
+      SizedBox(
+        width: double.infinity,
+        height: 50,
+        child: ElevatedButton(
+          onPressed: validateFormStudent,
+          child: const Text(
+            'Aceptar',
+          ),
+        ),
+      ),
+      TextButton(
+        onPressed: () {},
+        child: const Text(
+          'Cancelar',
+        ),
+      )
+    ]);
+
+    fg = FormGroup(mapReactiveForm);
+
     _formKey = GlobalKey<FormState>();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Agregar alumno'),
       ),
-      body: createBody(),
+      body: createBody(context),
     );
   }
 
-  createBody() {
+  createBody(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: SingleChildScrollView(
@@ -78,36 +122,7 @@ class _AddStudentPageState extends State<AddStudentPage> {
           formGroup: fg,
           key: _formKey,
           child: Column(
-            children: [
-              Column(
-                children: textFields
-                    .map((e) => Container(
-                          padding: const EdgeInsets.only(top: 15.0),
-                          child: e,
-                        ))
-                    .toList(),
-              ),
-              SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (!_formKey.currentState!.validate()) {
-                      return;
-                    }
-                  },
-                  child: const Text(
-                    'Aceptar',
-                  ),
-                ),
-              ),
-              TextButton(
-                onPressed: () {},
-                child: const Text(
-                  'Cancelar',
-                ),
-              ),
-            ]
+            children: textFields
                 .map((e) => Container(
                       padding: const EdgeInsets.only(top: 15.0),
                       child: e,
@@ -118,35 +133,16 @@ class _AddStudentPageState extends State<AddStudentPage> {
       ),
     );
   }
-}
 
-class CreateMyTextFormField extends StatelessWidget {
-  final String label;
-  final TextEditingController controller;
-  final String fcn;
+  validateFormStudent() {
+    fg.markAllAsTouched();
 
-  const CreateMyTextFormField({
-    Key? key,
-    required this.label,
-    required this.controller,
-    required this.fcn,
-  }) : super(key: key);
+    textEditingControllers.forEach((key, value) {
+      print(value.text);
+    });
 
-  @override
-  Widget build(BuildContext context) {
-    return ReactiveTextField(
-      formControlName: fcn,
-      controller: controller,
-      decoration: InputDecoration(
-        label: Text(
-          label,
-        ),
-      ),
-      validationMessages: (error) {
-        return {
-          'required': 'Campo requerido',
-        };
-      },
-    );
+    if (_formKey.currentState != null && !_formKey.currentState!.validate()) {
+      return;
+    }
   }
 }
