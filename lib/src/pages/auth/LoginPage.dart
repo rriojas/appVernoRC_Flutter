@@ -66,7 +66,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
 
     _passwordTextEditingController =
         //   TextEditingController(text: 'Pa\$\$w0rdmx');
-        TextEditingController(text: 'ITSMVA');
+        TextEditingController(text: '11223344');
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {});
   }
 

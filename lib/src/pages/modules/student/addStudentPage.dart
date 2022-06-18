@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:preyecto_tecnologico/src/pages/modules/student/widgets/myDropdown.dart';
-
+import 'package:preyecto_tecnologico/src/shared/form/myTextFormField.dart';
+import 'package:preyecto_tecnologico/src/shared/form/myDropdown.dart';
+import 'package:preyecto_tecnologico/src/shared/form/myTextFormBirthday.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-import 'widgets/createMyTextFormField.dart';
-import 'widgets/myTextFormBirthday.dart';
 import 'package:preyecto_tecnologico/src/pages/modules/student/settingsStudent.dart';
 
 class AddStudentPage extends StatelessWidget {
@@ -24,26 +23,27 @@ class AddStudentPage extends StatelessWidget {
     allWidgets.clear();
     textEditingControllers.clear();
 
-    for (int i = 0; i < listTextFieldMap.length; i++) {
-      keys = listTextFieldMap[i]
+    for (int i = 0; i < settingFormAddStudent.length; i++) {
+      keys = settingFormAddStudent[i]
           .keys
           .toString()
           .replaceAll('(', '')
           .replaceAll(')', '');
-      final validators = listTextFieldMap[i][keys]?['validators']
+      final validators = settingFormAddStudent[i][keys]?['validators']
           ?.map((e) =>
               e as Map<String, dynamic>? Function(AbstractControl<dynamic>))
           .toList();
 
-      final inputFormatted = listTextFieldMap[i][keys]?['inputFormatted']
+      final inputFormatted = settingFormAddStudent[i][keys]?['inputFormatted']
           ?.map((e) => e as TextInputFormatter)
           .toList();
 
       FormControl<String> item = FormControl(validators: validators!);
 
       var textEdit = TextEditingController();
-      final type =
-          listTextFieldMap[i][keys]?['type']?.map((e) => e as String).toList();
+      final type = settingFormAddStudent[i][keys]?['type']
+          ?.map((e) => e as String)
+          .toList();
 
       switch (type?[0]) {
         case 'text':
@@ -54,7 +54,7 @@ class AddStudentPage extends StatelessWidget {
             inputFormated: inputFormatted,
           ));
           break;
-        case 'drop':
+        /*  case 'drop':
           allWidgets.add(
             MyDropdown(
               controller: textEdit,
@@ -62,11 +62,12 @@ class AddStudentPage extends StatelessWidget {
               stream: service.getInstitutionStream,
             ),
           );
-          break;
+          break; */
         case 'birth':
           allWidgets.add(MyTextFormBirthday(
             controller: textEdit,
             label: keys,
+            fcn: keys,
           ));
           break;
         default:

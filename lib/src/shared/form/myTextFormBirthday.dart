@@ -5,10 +5,12 @@ import 'package:reactive_forms/reactive_forms.dart';
 class MyTextFormBirthday extends StatefulWidget {
   final TextEditingController controller;
   final String label;
+  final String fcn;
   const MyTextFormBirthday({
     Key? key,
     required this.controller,
     required this.label,
+    required this.fcn,
   }) : super(key: key);
 
   @override
@@ -19,7 +21,7 @@ class _MyTextFormBirthdayState extends State<MyTextFormBirthday> {
   @override
   Widget build(BuildContext context) {
     return ReactiveTextField(
-      formControlName: widget.label,
+      formControlName: widget.fcn,
       decoration: const InputDecoration(
         label: Text('Fecha de nacimiento'),
       ),

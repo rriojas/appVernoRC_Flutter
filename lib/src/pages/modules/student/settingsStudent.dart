@@ -2,7 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-List<Map<String, Map<String, List<dynamic>>>> listTextFieldMap = [
+List<Map<String, Map<String, List<dynamic>>>> settingFormAddStudent = [
   {
     'Nombre': {
       'type': ['text'],
@@ -111,6 +111,85 @@ List<Map<String, Map<String, List<dynamic>>>> listTextFieldMap = [
   {
     'Confirma contraseña': {
       'type': ['text'],
+      'validators': [Validators.required],
+      'inputFormatted': []
+    }
+  }
+];
+
+List<Map<String, Map<String, List<dynamic>>>> settingFormEditStudent = [
+  {
+    'matricula': {
+      'label': ['Matricula'],
+      'type': ['text'],
+      'validators': [Validators.required, Validators.minLength(3)],
+      'inputFormatted': []
+    }
+  },
+  {
+    'CURP': {
+      'label': ['CURP'],
+      'type': ['text'],
+      'validators': [Validators.required],
+      'inputFormatted': []
+    }
+  },
+  {
+    'semestre': {
+      'label': ['Semestre'],
+      'type': ['text'],
+      'validators': [Validators.required],
+      'inputFormatted': []
+    }
+  },
+  {
+    'promedio': {
+      'label': ['Promedio'],
+      'type': ['text'],
+      'validators': [Validators.required],
+      'inputFormatted': []
+    }
+  },
+  {
+    'porcentajeAvanceCarrera': {
+      'label': ['Porcentaje Avance Carrera'],
+      'type': ['text'],
+      'validators': [Validators.required],
+      'inputFormatted': []
+    }
+  },
+  {
+    'nombreInvestigadorRecomienda': {
+      'label': ['Nombre del investigador y/o docente que lo recomienda'],
+      'type': ['text'],
+      'validators': [Validators.required],
+      'inputFormatted': []
+    }
+  },
+  {
+    'correoInvestigadorRecomienda': {
+      'label': ['Nombre del investigador y/o docente que lo recomienda'],
+      'type': ['text'],
+      'validators': [Validators.required, Validators.email],
+      'inputFormatted': []
+    }
+  },
+  {
+    'telefonoInvestigadorRecomienda': {
+      'label': ['Telefono Investigador Recomienda'],
+      'type': ['text'],
+      'validators': [Validators.required],
+      'inputFormatted': [
+        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+        MaskTextInputFormatter(
+            mask: '(###) ###-####', filter: {"#": RegExp(r'[0-9]')})
+      ]
+    }
+  },
+  {
+    'Carrera': {
+      'label': [''],
+      'type': ['drop'],
       'validators': [Validators.required],
       'inputFormatted': []
     }

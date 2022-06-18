@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:preyecto_tecnologico/src/models/moduleStudentInterface.dart';
 import 'package:preyecto_tecnologico/src/pages/modules/student/addStudentPage.dart';
 import 'package:preyecto_tecnologico/src/pages/modules/student/detailsStudentPage.dart';
-import 'package:preyecto_tecnologico/src/services/loginService.dart';
+import 'package:preyecto_tecnologico/src/services/studentService.dart';
 import 'package:preyecto_tecnologico/src/utils/utils.dart';
 
 class ModuleStudentPage extends StatelessWidget {
   ModuleStudentPage({Key? key}) : super(key: key);
 
-  late LoginService service;
+  late StudentService service;
   Utils capitalizer = Utils();
 
   @override
   Widget build(BuildContext context) {
-    service = LoginService();
+    service = StudentService();
     return Scaffold(
       appBar: AppBar(
         title: const Text(' Alumnos'),
