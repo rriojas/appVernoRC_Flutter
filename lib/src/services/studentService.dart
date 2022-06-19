@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:convert' show json;
+import 'dart:convert' show Utf8Decoder, json;
 import 'package:http/http.dart' as http;
 import 'package:preyecto_tecnologico/src/models/availableProjectsInterface.dart';
 import 'package:preyecto_tecnologico/src/models/campusModuleInterface.dart';
@@ -45,14 +45,31 @@ class StudentService {
   }
 
   Future<InforAlumnoInterface> getStudent(String id) async {
-    final url = '$baseUrl/modulos/alumno/editarAlumnoController.php';
+    const url = '$baseUrl/modulos/alumno/editarAlumnoController.php';
     final body = {'id': id};
 
-    final response =
+    final http.Response response =
         await http.post(Uri.parse(url), headers: service.headers, body: body);
-    final data = inforAlumnoInterfaceFromJson(response.body);
-    print(data.toJson()['Alumno']);
+
+    final data = inforAlumnoInterfaceFromJson(
+        const Utf8Decoder().convert(response.bodyBytes));
+
     //setInstitution(data);
     return data;
+  }
+
+  Future updateStudent(dynamic body) async {
+    const url = '$baseUrl/modulos/alumno/alumnoController.php?method=Update';
+
+    final http.Response response =
+        await http.post(Uri.parse(url), headers: service.headers, body: body);
+
+    print(response.body);
+
+    // final data = inforAlumnoInterfaceFromJson(
+    //   const Utf8Decoder().convert(response.bodyBytes));
+
+    //setInstitution(data);
+    return null;
   }
 }

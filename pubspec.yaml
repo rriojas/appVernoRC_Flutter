@@ -41,6 +41,7 @@ dependencies:
   reactive_forms: ^12.0.0
   mask_text_input_formatter: ^2.0.0
   date_format: ^2.0.4
+  unorm_dart: ^0.2.0
  
   
 

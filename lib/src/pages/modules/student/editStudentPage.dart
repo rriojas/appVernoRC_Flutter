@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:preyecto_tecnologico/src/models/infoAlumnoInterface.dart';
 import 'package:preyecto_tecnologico/src/models/moduleStudentInterface.dart';
 import 'package:preyecto_tecnologico/src/pages/modules/student/settingsStudent.dart';
@@ -35,6 +36,9 @@ class _EditStudentPageState extends State<EditStudentPage> {
 
   String keys = '';
 
+  final formatted = MaskTextInputFormatter(
+      mask: '(###) ###-####', filter: {"#": RegExp(r'[0-9]')});
+
   @override
   void initState() {
     service = StudentService();
@@ -48,9 +52,6 @@ class _EditStudentPageState extends State<EditStudentPage> {
   Widget build(BuildContext context) {
     final mapStudent = widget.student.toJson();
 
-    mapStudent.forEach((key, value) {
-      print('$key - $value');
-    });
     mapReactiveForm.clear();
     allWidgets.clear();
     textEditingControllers.clear();
@@ -75,10 +76,17 @@ class _EditStudentPageState extends State<EditStudentPage> {
 
       final alumno = widget.student.toJson();
       final dataAlumno = alumno['Alumno'];
-      print(dataAlumno);
 
-      FormControl<String> item =
-          FormControl<String>(value: dataAlumno[keys], validators: validators!);
+      String? select;
+      if (keys == 'idCarrera') {
+        select = widget.student.optCarrera
+            ?.firstWhere(
+                (element) => element.id == widget.student.alumno?.idCarrera)
+            .descripcion;
+      }
+
+      FormControl<String> item = FormControl<String>(
+          value: select ?? dataAlumno[keys], validators: validators!);
 
       var textEdit = TextEditingController();
       final type = settingFormEditStudent[i][keys]?['type']
@@ -98,12 +106,15 @@ class _EditStudentPageState extends State<EditStudentPage> {
           final items = widget.student.optCarrera
               ?.map((e) => e.descripcion as String)
               .toList();
+
           allWidgets.add(
             MyDropdown(
               controller: textEdit,
-              label: keys,
+              label: label![0],
               stream: service.getInstitutionStream,
               items: items!,
+              idSelect: select,
+              fcn: keys,
             ),
           );
           break;
@@ -143,6 +154,19 @@ class _EditStudentPageState extends State<EditStudentPage> {
       )
     ]);
 
+    mapReactiveForm.addAll(
+      {'idAlumno': FormControl(value: widget.student.alumno?.idAlumno)},
+    );
+    mapReactiveForm.addAll(
+      {'method': FormControl(value: 'Update')},
+    );
+    mapReactiveForm.addAll(
+      {'idVerano': FormControl(value: widget.student.alumno?.idVerano)},
+    );
+    mapReactiveForm.addAll(
+      {'idUsuario': FormControl(value: widget.student.alumno?.idUsuario)},
+    );
+
     fg = FormGroup(mapReactiveForm);
 
     _formKey = GlobalKey<FormState>();
@@ -155,7 +179,6 @@ class _EditStudentPageState extends State<EditStudentPage> {
   }
 
   createBody(BuildContext context) {
-    print(widget.student);
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: SingleChildScrollView(
@@ -180,5 +203,17 @@ class _EditStudentPageState extends State<EditStudentPage> {
     if (_formKey.currentState != null && !_formKey.currentState!.validate()) {
       return;
     }
+
+    fg.control('idCarrera').value = widget.student.optCarrera
+        ?.firstWhere(
+            (element) => element.descripcion == fg.control('idCarrera').value)
+        .id;
+
+    service.updateStudent(fg.value);
+    fg.control('idCarrera').value = widget.student.optCarrera
+        ?.firstWhere((element) => element.id == fg.control('idCarrera').value)
+        .descripcion;
+
+    //textEditingControllers['idCarrera'] = widget.student.optCarrera?.firstWhere((element) => element.descripcion == textEditingControllers['idCarrera']).id as TextEditingController
   }
 }

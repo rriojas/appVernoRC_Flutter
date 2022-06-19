@@ -187,8 +187,8 @@ List<Map<String, Map<String, List<dynamic>>>> settingFormEditStudent = [
     }
   },
   {
-    'Carrera': {
-      'label': [''],
+    'idCarrera': {
+      'label': ['Carrera'],
       'type': ['drop'],
       'validators': [Validators.required],
       'inputFormatted': []

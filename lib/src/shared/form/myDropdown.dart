@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:preyecto_tecnologico/src/models/institutionCampusAvailable.dart';
 import 'package:preyecto_tecnologico/src/services/studentService.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import "package:unorm_dart/unorm_dart.dart" as unorm;
 
 class MyDropdown extends StatefulWidget {
   final TextEditingController controller;
   final String label;
+  final String fcn;
   final Stream<InstitutionCampusAvailable> stream;
   final List<String> items;
+  final String? idSelect;
 
   const MyDropdown({
     Key? key,
@@ -15,6 +18,8 @@ class MyDropdown extends StatefulWidget {
     required this.label,
     required this.stream,
     required this.items,
+    this.idSelect,
+    required this.fcn,
   }) : super(key: key);
 
   @override
@@ -45,7 +50,7 @@ class _MyDropdownState extends State<MyDropdown> {
         .toList();
 
     return ReactiveDropdownField(
-      formControlName: widget.label,
+      formControlName: widget.fcn,
       isExpanded: true,
       items: listDropdown,
       onChanged: (dynamic onChanged) {

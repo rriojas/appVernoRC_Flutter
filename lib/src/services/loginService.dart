@@ -37,17 +37,13 @@ class LoginService {
   Future<bool> login(String email, String password) async {
     final body = {'correo': email, 'password': password, 'method': 'Login'};
 
-    print(body);
     const url = '$baseUrl/modulos/usuario/usuarioController.php';
-    print(url);
 
     final response = await http.post(
       Uri.parse(url),
       headers: headers,
       body: body,
     );
-    print(response.statusCode);
-
     if (response.statusCode >= 400) {
       return false;
     }
