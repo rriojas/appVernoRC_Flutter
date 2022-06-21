@@ -1,21 +1,50 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:preyecto_tecnologico/src/shared/form/myTextFormField.dart';
+import 'package:preyecto_tecnologico/src/models/institutionCampusAvailable.dart';
 import 'package:preyecto_tecnologico/src/shared/form/myDropdown.dart';
+import 'package:preyecto_tecnologico/src/shared/form/myTextFormField.dart';
 import 'package:preyecto_tecnologico/src/shared/form/myTextFormBirthday.dart';
+import 'package:preyecto_tecnologico/src/shared/showMessage/myShowMessage.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import 'package:preyecto_tecnologico/src/pages/modules/student/settingsStudent.dart';
 
-class AddStudentPage extends StatelessWidget {
-  AddStudentPage({Key? key}) : super(key: key);
+class AddStudentPage extends StatefulWidget {
+  final InstitutionCampusAvailable data;
 
+  AddStudentPage({
+    Key? key,
+    required this.data,
+  }) : super(key: key);
+
+  @override
+  State<AddStudentPage> createState() => _AddStudentPageState();
+}
+
+class _AddStudentPageState extends State<AddStudentPage> {
   late GlobalKey<FormState> _formKey;
+
   late FormGroup fg;
+
   Map<String, TextEditingController> textEditingControllers = {};
+
   var allWidgets = <Widget>[];
+
   Map<String, FormControl> mapReactiveForm = {};
+
   String keys = '';
+  String label = '';
+  final myShowDialog = MyShowMessages();
+
+  @override
+  void initState() {
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      service.getAvailableInstitutions();
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,30 +74,53 @@ class AddStudentPage extends StatelessWidget {
           ?.map((e) => e as String)
           .toList();
 
+      label = settingFormAddStudent[i][keys]?['label']
+              ?.map((e) => e as String)
+              .toList()[0] ??
+          '';
+
       switch (type?[0]) {
         case 'text':
           allWidgets.add(CreateMyTextFormField(
-            controller: textEdit,
-            label: keys,
+            label: label,
             fcn: keys,
             inputFormated: inputFormatted,
+            oscureText: (keys == 'Contraseña' || keys == 'Confirma contraseña')
+                ? true
+                : false,
           ));
           break;
-        /*  case 'drop':
+        case 'drop':
+          List<String> items = [];
+
+          if (keys == 'Escuela/Facultad/Centro de investigación') {
+            items = widget.data.campus?.map((e) => e.descripcion ?? '').toList()
+                as List<String>;
+          }
+          if (keys == 'Institución') {
+            items = widget.data.instituciones
+                ?.map((e) => e.descripcion ?? '')
+                .toList() as List<String>;
+          }
+          if (keys == 'Genero') {
+            items = ['Masculino', 'Femenino'];
+          }
+
           allWidgets.add(
             MyDropdown(
-              controller: textEdit,
-              label: keys,
-              stream: service.getInstitutionStream,
+                fcn: keys,
+                label: label,
+                stream: service.getInstitutionStream,
+                items: items),
+          );
+          break;
+        case 'birth':
+          allWidgets.add(
+            MyTextFormBirthday(
+              label: label,
+              fcn: keys,
             ),
           );
-          break; */
-        case 'birth':
-          allWidgets.add(MyTextFormBirthday(
-            controller: textEdit,
-            label: keys,
-            fcn: keys,
-          ));
           break;
         default:
       }
@@ -135,5 +187,43 @@ class AddStudentPage extends StatelessWidget {
     if (_formKey.currentState != null && !_formKey.currentState!.validate()) {
       return;
     }
+  }
+
+  showConfirmAddStudent() {
+    myShowDialog.myShowModalBottomSheet(
+      context: context,
+      title: 'Aviso',
+      container: '¿Deseas dar de alta este alumno?',
+      callBackOne: sendData,
+      callBackTwo: () => Navigator.pop(context),
+      titleButtonTwo: 'Cancelar',
+    );
+  }
+
+  sendData() async {
+    Navigator.pop(context);
+    await service.updateStudent(fg.value).then((value) => showMessage());
+    /*   fg.control('idCarrera').value = widget.data.instituciones
+        ?.firstWhere((element) => element.id == fg.control('idCarrera').value)
+        .descripcion; */
+  }
+
+  showMessage() {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (_) => AlertDialog(
+              title: const Text('Aviso'),
+              content: const Text('Alumno fue editado correctamente'),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Ok'))
+              ],
+            ));
   }
 }

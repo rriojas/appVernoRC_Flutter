@@ -5,6 +5,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 List<Map<String, Map<String, List<dynamic>>>> settingFormAddStudent = [
   {
     'Nombre': {
+      'label': ['Nombre'],
       'type': ['text'],
       'validators': [Validators.required, Validators.minLength(3)],
       'inputFormatted': []
@@ -12,6 +13,7 @@ List<Map<String, Map<String, List<dynamic>>>> settingFormAddStudent = [
   },
   {
     'Apellido paterno': {
+      'label': ['Apellido paterno'],
       'type': ['text'],
       'validators': [Validators.required],
       'inputFormatted': []
@@ -19,6 +21,7 @@ List<Map<String, Map<String, List<dynamic>>>> settingFormAddStudent = [
   },
   {
     'Apellido materno': {
+      'label': ['Apellido materno'],
       'type': ['text'],
       'validators': [Validators.required],
       'inputFormatted': []
@@ -26,6 +29,7 @@ List<Map<String, Map<String, List<dynamic>>>> settingFormAddStudent = [
   },
   {
     'Calle': {
+      'label': ['Calle'],
       'type': ['text'],
       'validators': [Validators.required],
       'inputFormatted': []
@@ -33,6 +37,7 @@ List<Map<String, Map<String, List<dynamic>>>> settingFormAddStudent = [
   },
   {
     'Numero': {
+      'label': ['Numero'],
       'type': ['text'],
       'validators': [Validators.required],
       'inputFormatted': []
@@ -40,6 +45,7 @@ List<Map<String, Map<String, List<dynamic>>>> settingFormAddStudent = [
   },
   {
     'Colonia': {
+      'label': ['Colonia'],
       'type': ['text'],
       'validators': [Validators.required],
       'inputFormatted': []
@@ -47,6 +53,7 @@ List<Map<String, Map<String, List<dynamic>>>> settingFormAddStudent = [
   },
   {
     'Codígo postal': {
+      'label': ['Codígo postal'],
       'type': ['text'],
       'validators': [Validators.required],
       'inputFormatted': [
@@ -57,6 +64,7 @@ List<Map<String, Map<String, List<dynamic>>>> settingFormAddStudent = [
   },
   {
     'Fecha de nacimiento': {
+      'label': ['Fecha de nacimiento'],
       'type': ['birth'],
       'validators': [Validators.required],
       'inputFormatted': []
@@ -64,6 +72,7 @@ List<Map<String, Map<String, List<dynamic>>>> settingFormAddStudent = [
   },
   {
     'Genero': {
+      'label': ['Genero'],
       'type': ['drop'],
       'validators': [Validators.required],
       'inputFormatted': []
@@ -71,6 +80,7 @@ List<Map<String, Map<String, List<dynamic>>>> settingFormAddStudent = [
   },
   {
     'Telefono': {
+      'label': ['Telefono'],
       'type': ['text'],
       'validators': [Validators.required],
       'inputFormatted': [
@@ -82,6 +92,7 @@ List<Map<String, Map<String, List<dynamic>>>> settingFormAddStudent = [
   },
   {
     'Institución': {
+      'label': ['Institución'],
       'type': ['drop'],
       'validators': [Validators.required],
       'inputFormatted': []
@@ -89,6 +100,7 @@ List<Map<String, Map<String, List<dynamic>>>> settingFormAddStudent = [
   },
   {
     'Escuela/Facultad/Centro de investigación': {
+      'label': ['Escuela/Facultad/Centro de investigación'],
       'type': ['drop'],
       'validators': [Validators.required],
       'inputFormatted': []
@@ -96,6 +108,7 @@ List<Map<String, Map<String, List<dynamic>>>> settingFormAddStudent = [
   },
   {
     'Correo': {
+      'label': ['Correo'],
       'type': ['text'],
       'validators': [Validators.required, Validators.email],
       'inputFormatted': []
@@ -103,6 +116,7 @@ List<Map<String, Map<String, List<dynamic>>>> settingFormAddStudent = [
   },
   {
     'Contraseña': {
+      'label': ['Contraseña'],
       'type': ['text'],
       'validators': [Validators.required],
       'inputFormatted': []
@@ -110,6 +124,7 @@ List<Map<String, Map<String, List<dynamic>>>> settingFormAddStudent = [
   },
   {
     'Confirma contraseña': {
+      'label': ['Confirma contraseña'],
       'type': ['text'],
       'validators': [Validators.required],
       'inputFormatted': []

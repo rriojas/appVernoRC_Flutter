@@ -5,7 +5,6 @@ import 'package:reactive_forms/reactive_forms.dart';
 import "package:unorm_dart/unorm_dart.dart" as unorm;
 
 class MyDropdown extends StatefulWidget {
-  final TextEditingController controller;
   final String label;
   final String fcn;
   final Stream<InstitutionCampusAvailable> stream;
@@ -14,7 +13,6 @@ class MyDropdown extends StatefulWidget {
 
   const MyDropdown({
     Key? key,
-    required this.controller,
     required this.label,
     required this.stream,
     required this.items,
@@ -31,10 +29,6 @@ final service = StudentService();
 class _MyDropdownState extends State<MyDropdown> {
   @override
   void initState() {
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-      service.getAvailableInstitutions();
-    });
-
     super.initState();
   }
 
@@ -53,9 +47,6 @@ class _MyDropdownState extends State<MyDropdown> {
       formControlName: widget.fcn,
       isExpanded: true,
       items: listDropdown,
-      onChanged: (dynamic onChanged) {
-        widget.controller.text = onChanged;
-      },
       decoration: InputDecoration(
           label: Text(
         widget.label,

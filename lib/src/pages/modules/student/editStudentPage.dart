@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:preyecto_tecnologico/src/models/infoAlumnoInterface.dart';
-import 'package:preyecto_tecnologico/src/models/moduleStudentInterface.dart';
 import 'package:preyecto_tecnologico/src/pages/modules/student/settingsStudent.dart';
 import 'package:preyecto_tecnologico/src/services/studentService.dart';
 import 'package:preyecto_tecnologico/src/shared/form/myDropdown.dart';
 import 'package:preyecto_tecnologico/src/shared/form/myTextFormBirthday.dart';
 import 'package:preyecto_tecnologico/src/shared/form/myTextFormField.dart';
+import 'package:preyecto_tecnologico/src/shared/loading/loading.dart';
+import 'package:preyecto_tecnologico/src/shared/showMessage/myShowMessage.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class EditStudentPage extends StatefulWidget {
@@ -28,16 +29,17 @@ class _EditStudentPageState extends State<EditStudentPage> {
 
   late FormGroup fg;
 
-  Map<String, TextEditingController> textEditingControllers = {};
-
   var allWidgets = <Widget>[];
 
   Map<String, FormControl> mapReactiveForm = {};
 
   String keys = '';
+  final loading = Loading();
 
   final formatted = MaskTextInputFormatter(
       mask: '(###) ###-####', filter: {"#": RegExp(r'[0-9]')});
+
+  final myShowDialog = MyShowMessages();
 
   @override
   void initState() {
@@ -50,11 +52,8 @@ class _EditStudentPageState extends State<EditStudentPage> {
 
   @override
   Widget build(BuildContext context) {
-    final mapStudent = widget.student.toJson();
-
     mapReactiveForm.clear();
     allWidgets.clear();
-    textEditingControllers.clear();
 
     for (int i = 0; i < settingFormEditStudent.length; i++) {
       keys = settingFormEditStudent[i]
@@ -88,7 +87,6 @@ class _EditStudentPageState extends State<EditStudentPage> {
       FormControl<String> item = FormControl<String>(
           value: select ?? dataAlumno[keys], validators: validators!);
 
-      var textEdit = TextEditingController();
       final type = settingFormEditStudent[i][keys]?['type']
           ?.map((e) => e as String)
           .toList();
@@ -96,7 +94,6 @@ class _EditStudentPageState extends State<EditStudentPage> {
       switch (type?[0]) {
         case 'text':
           allWidgets.add(CreateMyTextFormField(
-            controller: textEdit,
             label: label![0],
             fcn: keys,
             inputFormated: inputFormatted,
@@ -109,7 +106,6 @@ class _EditStudentPageState extends State<EditStudentPage> {
 
           allWidgets.add(
             MyDropdown(
-              controller: textEdit,
               label: label![0],
               stream: service.getInstitutionStream,
               items: items!,
@@ -120,7 +116,6 @@ class _EditStudentPageState extends State<EditStudentPage> {
           break;
         case 'birth':
           allWidgets.add(MyTextFormBirthday(
-            controller: textEdit,
             label: label![0],
             fcn: keys,
           ));
@@ -129,8 +124,6 @@ class _EditStudentPageState extends State<EditStudentPage> {
       }
 
       mapReactiveForm.putIfAbsent(keys, () => item);
-
-      textEditingControllers.putIfAbsent(keys, () => textEdit);
     }
 
     allWidgets.addAll([
@@ -208,12 +201,46 @@ class _EditStudentPageState extends State<EditStudentPage> {
         ?.firstWhere(
             (element) => element.descripcion == fg.control('idCarrera').value)
         .id;
+    showConfirmEditStudent();
+  }
 
-    service.updateStudent(fg.value);
+  sendData() async {
+    Navigator.pop(context);
+    await service.updateStudent(fg.value).then((value) => showMessage());
     fg.control('idCarrera').value = widget.student.optCarrera
         ?.firstWhere((element) => element.id == fg.control('idCarrera').value)
         .descripcion;
+  }
 
-    //textEditingControllers['idCarrera'] = widget.student.optCarrera?.firstWhere((element) => element.descripcion == textEditingControllers['idCarrera']).id as TextEditingController
+  showConfirmEditStudent() {
+    myShowDialog.myShowModalBottomSheet(
+        context: context,
+        title: 'Aviso',
+        callBackOne: sendData,
+        callBackTwo: () => Navigator.pop(context),
+        container: '¿Deseas editar este alumno?',
+        titleButtonTwo: 'Cancelar',
+        icon: Icons.warning,
+        colorIcon: Colors.orange);
+  }
+
+  showMessage() {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (_) => AlertDialog(
+              title: const Text('Aviso'),
+              content: const Text('Alumno fue editado correctamente'),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Ok'))
+              ],
+            ));
   }
 }

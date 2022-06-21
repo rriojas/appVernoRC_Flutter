@@ -3,6 +3,7 @@ import 'package:preyecto_tecnologico/src/models/moduleStudentInterface.dart';
 import 'package:preyecto_tecnologico/src/pages/modules/student/addStudentPage.dart';
 import 'package:preyecto_tecnologico/src/pages/modules/student/detailsStudentPage.dart';
 import 'package:preyecto_tecnologico/src/services/studentService.dart';
+import 'package:preyecto_tecnologico/src/shared/loading/loading.dart';
 import 'package:preyecto_tecnologico/src/utils/utils.dart';
 
 class ModuleStudentPage extends StatelessWidget {
@@ -10,22 +11,30 @@ class ModuleStudentPage extends StatelessWidget {
 
   late StudentService service;
   Utils capitalizer = Utils();
+  final loading = Loading();
 
   @override
   Widget build(BuildContext context) {
     service = StudentService();
     return Scaffold(
       appBar: AppBar(
-        title: const Text(' Alumnos'),
+        title: const Text('Alumnos'),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => AddStudentPage(),
-            ),
-          );
+        onPressed: () async {
+          loading.load(context);
+          await Future.delayed(const Duration(seconds: 1));
+          await service.getAvailableInstitutions().then((value) {
+            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => AddStudentPage(
+                  data: value,
+                ),
+              ),
+            );
+          });
         },
         child: const Icon(Icons.add),
         tooltip: 'Agregar alumno',

@@ -4,24 +4,24 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 class CreateMyTextFormField extends StatelessWidget {
   final String label;
-  final TextEditingController controller;
   final String fcn;
   final List<TextInputFormatter>? inputFormated;
+  final bool? oscureText;
 
   const CreateMyTextFormField({
     Key? key,
     required this.label,
-    required this.controller,
     required this.fcn,
     this.inputFormated,
+    this.oscureText,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ReactiveTextField(
+      obscureText: oscureText ?? false,
       formControlName: fcn,
       inputFormatters: inputFormated,
-      controller: controller,
       decoration: InputDecoration(
         label: Text(
           label,

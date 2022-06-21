@@ -35,6 +35,7 @@ class _DetailsStudentPageState extends State<DetailsStudentPage> {
         title: const Text('Admon alumnos'),
         actions: [
           IconButton(
+            tooltip: 'Editar alumno',
             onPressed: () async {
               loadingInfoStudent = true;
               setState(() {});

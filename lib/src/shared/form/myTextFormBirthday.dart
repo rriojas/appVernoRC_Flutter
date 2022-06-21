@@ -3,12 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class MyTextFormBirthday extends StatefulWidget {
-  final TextEditingController controller;
   final String label;
   final String fcn;
   const MyTextFormBirthday({
     Key? key,
-    required this.controller,
     required this.label,
     required this.fcn,
   }) : super(key: key);
@@ -25,9 +23,7 @@ class _MyTextFormBirthdayState extends State<MyTextFormBirthday> {
       decoration: const InputDecoration(
         label: Text('Fecha de nacimiento'),
       ),
-      controller: widget.controller,
       onTap: () {
-        _selectDate(context, widget.controller);
         FocusScope.of(context).requestFocus(FocusNode());
       },
       validationMessages: (error) {
