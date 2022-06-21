@@ -48,6 +48,9 @@ if($_POST)
         $Alumno->idUsuario = $idUsuario;
         $Alumno->idVerano = $idVerano;
         $Alumno->fechaModifica = date("Y-m-d H:i:s");
+        echo $Alumno->fechaModifica;
+
+        header('log_'.$file.'_'.$caller['line'].': '.$Alumno->fechaModifica);
        
         $rowsAfectados = $Alumno->CreateUpdate();
         if($rowsAfectados > 0)

@@ -20,7 +20,7 @@ else
   <div class="container-fluid">
     <a class="navbar-brand"></a>
     <form class="d-flex float-end">
-      <button id="btnAgregar" type="button" class="btn btn-primary">Agregar <span class="fas fa-plus-circle"></span></button>
+      <button id="btnAgregar" type="button" class="btn btn-primary">Agregarrr <span class="fas fa-plus-circle"></span></button>
     </form>
   </div>
 </nav>

@@ -28,6 +28,7 @@
                 $this->cnx = new PDO("mysql:host=$this->server;dbname=$this->db;charset=UTF8",$this->usr, $this->pwd);
                 $this->cnx->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 //$this->Update("SET NAMES 'utf8'");
+                
                 return "1"; 
             }
             function Close()
