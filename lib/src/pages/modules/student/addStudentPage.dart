@@ -184,6 +184,7 @@ class _AddStudentPageState extends State<AddStudentPage> {
 
   validateFormStudent() {
     fg.markAllAsTouched();
+    print(fg.value);
     if (_formKey.currentState != null && !_formKey.currentState!.validate()) {
       return;
     }

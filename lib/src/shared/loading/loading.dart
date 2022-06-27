@@ -10,9 +10,7 @@ class Loading {
           return WillPopScope(
             onWillPop: () => Future.value(false),
             child: Container(
-              color: Colors.white.withOpacity(
-                0.7,
-              ),
+              color: Colors.black12,
               child: const Center(child: CircularProgressIndicator()),
             ),
           );

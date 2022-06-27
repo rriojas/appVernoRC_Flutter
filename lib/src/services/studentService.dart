@@ -1,13 +1,10 @@
 import 'dart:async';
-import 'dart:convert' show Utf8Decoder, json;
+import 'dart:convert' show Utf8Decoder;
 import 'package:http/http.dart' as http;
-import 'package:preyecto_tecnologico/src/models/availableProjectsInterface.dart';
-import 'package:preyecto_tecnologico/src/models/campusModuleInterface.dart';
 import 'package:preyecto_tecnologico/src/models/infoAlumnoInterface.dart';
 import 'package:preyecto_tecnologico/src/models/institutionCampusAvailable.dart';
-import 'package:preyecto_tecnologico/src/models/investigatorModuleInterface.dart';
 import 'package:preyecto_tecnologico/src/models/moduleStudentInterface.dart';
-import 'package:preyecto_tecnologico/src/models/projectModuleInterface.dart';
+import 'package:preyecto_tecnologico/src/models/validateStudentInterface.dart';
 import 'package:preyecto_tecnologico/src/providers/baseUrl.dart';
 import 'package:preyecto_tecnologico/src/services/loginService.dart';
 
@@ -63,6 +60,38 @@ class StudentService {
 
     final http.Response response =
         await http.post(Uri.parse(url), headers: service.headers, body: body);
+
+    print(response.body);
+
+    // final data = inforAlumnoInterfaceFromJson(
+    //   const Utf8Decoder().convert(response.bodyBytes));
+
+    //setInstitution(data);
+    return null;
+  }
+
+  Future<ValidateStudentInterface> getStatusStudent(dynamic body) async {
+    const url = '$baseUrl/modulos/alumno/validar.php';
+    final data = {'id': body};
+    final http.Response response =
+        await http.post(Uri.parse(url), headers: service.headers, body: data);
+
+    final statusStudent = validateStudentInterfaceFromJson(response.body);
+
+    // final data = inforAlumnoInterfaceFromJson(
+    //   const Utf8Decoder().convert(response.bodyBytes));
+
+    //setInstitution(data);
+    return statusStudent;
+  }
+
+  Future changeStatusValidateStudent(dynamic body, String method) async {
+    const url = '$baseUrl/modulos/usuario/usuarioController.php';
+
+    final data = {'idAlumno': body, 'method': method};
+    print(data);
+    final http.Response response =
+        await http.post(Uri.parse(url), headers: service.headers, body: data);
 
     print(response.body);
 

@@ -16,15 +16,19 @@ class MyTextFormBirthday extends StatefulWidget {
 }
 
 class _MyTextFormBirthdayState extends State<MyTextFormBirthday> {
+  TextEditingController text = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return ReactiveTextField(
+      controller: text,
       formControlName: widget.fcn,
       decoration: const InputDecoration(
         label: Text('Fecha de nacimiento'),
       ),
       onTap: () {
         FocusScope.of(context).requestFocus(FocusNode());
+        _selectDate();
       },
       validationMessages: (error) {
         return {
@@ -37,7 +41,7 @@ class _MyTextFormBirthdayState extends State<MyTextFormBirthday> {
     );
   }
 
-  _selectDate(BuildContext mycontext, TextEditingController controller) {
+  _selectDate() {
     final dateNow = DateTime.now();
     final dateInit = DateTime(dateNow.year - 100, dateNow.month, dateNow.day);
 
@@ -53,8 +57,7 @@ class _MyTextFormBirthdayState extends State<MyTextFormBirthday> {
       if (onValue != null) {
         final dateTemp = DateTime.parse(onValue.toString());
 
-        controller.text =
-            formatDate(dateTemp, [yyyy, '-', mm, '-', dd]).toString();
+        text.text = formatDate(dateTemp, [yyyy, '-', mm, '-', dd]).toString();
         setState(() {});
       }
     });
